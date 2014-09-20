@@ -1,0 +1,46 @@
+{
+    "name":             "package",
+    "version":          "0.0.0",
+    "author":           "Alan Gutierrez <alan@prettyrobots.com>",
+    "description":      "Wink Hub publish/subscribe API.",
+    "keywords":
+    [
+                        "wink", "quirky", "automation", "publish", "subscribe"
+    ],
+    "contributors":     [],
+    "homepage":         "https://github.com/winkapp/wink-hub-api",
+    "bugs":             "https://github.com/winkapp/wink-hub-api/issues",
+    "repository":
+    {
+                        "type": "git",
+                        "url": "http://github.com/winkapp/wink-hub-api.git"
+    },
+    "bin":
+    {
+                        "simulator":          "bin/simulator.bin.js"
+    },
+    "dependencies":
+    {
+                        "media-typer":          "0.2.0",
+                        "raw-body":             "1.2.2",
+                        "underscore":           "1.6.0",
+                        "cadence":              "0.0.37",
+                        "connect":              "3.0.1",
+                        "quip":                 "0.1.2",
+                        "dispatch":             "1.0.0",
+                        "errorhandler":         "1.1.1",
+                        "body-parser":          "1.4.3"
+    },
+    "devDependencies":
+    {
+                        "proof":                "0.0.45"
+    },
+    "bin":
+    {
+                        "server":               "./bin/server.bin.js"
+    },
+    "scripts":
+    {
+                        "test": "(proof run t/*/*.t.js | tee .proof.out | proof progress) || (proof errors < .proof.out) || exit 1"
+    }
+}
