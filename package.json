@@ -15,10 +15,6 @@
                         "type": "git",
                         "url": "http://github.com/winkapp/wink-hub-api.git"
     },
-    "bin":
-    {
-                        "simulator":          "bin/simulator.bin.js"
-    },
     "dependencies":
     {
                         "media-typer":          "0.2.0",
@@ -34,10 +30,6 @@
     "devDependencies":
     {
                         "proof":                "0.0.45"
-    },
-    "bin":
-    {
-                        "server":               "./bin/server.bin.js"
     },
     "scripts":
     {
