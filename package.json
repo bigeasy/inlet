@@ -1,5 +1,5 @@
 {
-    "name":             "package",
+    "name":             "middleware",
     "version":          "0.0.0",
     "author":           "Alan Gutierrez <alan@prettyrobots.com>",
     "description":      "Wink Hub publish/subscribe API.",
