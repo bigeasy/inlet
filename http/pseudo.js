@@ -35,16 +35,19 @@ Psuedo.prototype.dispatch = function () {
             }
         })
         .use(function (request, response) {
-            var headers = {}
+            var headers = {}, received
             for (var header in request.headers) {
                 headers[header] = request.headers[header]
             }
-            this._received.push({
+            this._received.push(received = {
                 method: request.method,
                 headers: headers,
                 url: request.url,
                 body: request.body
             })
+            if (this.trace) {
+                console.log(require('util').inspect(received, null, Infinity))
+            }
             var data = this._responses.shift() || {}
             data.statusCode || (data.statusCode = 200)
             data.headers || (data.headers = { 'content-type': 'application/json' })
