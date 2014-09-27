@@ -20,13 +20,16 @@
                         "media-typer":          "0.2.0",
                         "raw-body":             "1.2.2",
                         "underscore":           "1.6.0",
-                        "cadence":              "0.0.42",
+                        "cadence":              "0.0.43",
                         "connect":              "3.0.1",
                         "quip":                 "0.1.2",
                         "dispatch":             "1.0.0",
                         "errorhandler":         "1.1.1",
                         "body-parser":          "1.4.3",
-                        "turnstile":            "0.0.5"
+                        "turnstile":            "0.0.5",
+                        "magazine":             "0.0.12",
+                        "node-uuid":            "1.4.1",
+                        "accum":                "0.3.6"
     },
     "devDependencies":
     {

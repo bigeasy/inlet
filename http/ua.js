@@ -1,4 +1,3 @@
-var accum = require('accum')
 var cadence = require('cadence')
 var url = require('url')
 var ok = require('assert').ok
@@ -6,6 +5,7 @@ var assert = require('assert')
 var logger = require('../monitor/logger')('http.ua')
 var Binder = require('../net/binder')
 var typer = require('media-typer')
+var accum = require('accum')
 var __slice = [].slice
 
 function UserAgent (log) {
@@ -117,7 +117,7 @@ UserAgent.prototype.fetch = cadence(function (step) {
             request.options.headers['content-length'] = payload.length
         }
         var fetch = step([function () {
-            var client = http.request(request.options, step(-1))
+            var client = http.request(request.options, step(null))
                              .on('error', step(Error))
             if (payload) {
                 client.write(payload)
@@ -152,7 +152,7 @@ UserAgent.prototype.fetch = cadence(function (step) {
             return [ fetch, JSON.parse(body.toString()), response, body ]
         }], function (response) {
             step(function () {
-                response.pipe(accum(step(-1)))
+                response.pipe(accum(step(null)))
             }, function (body) {
                 var parsed = body
                 var display = null
