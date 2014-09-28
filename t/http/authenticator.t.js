@@ -1,4 +1,4 @@
-require('proof')(10, function (step, assert) {
+require('proof')(10, require('cadence')(function (step, assert) {
     var middleware = require('../../http/middleware')
     var Authenticator = require('../../http/authenticator'),
         Bouquet = require('../../net/bouquet'),
@@ -69,4 +69,4 @@ require('proof')(10, function (step, assert) {
         assert(body, { a: 1 }, 'allowed body')
         bouquet.stop(step())
     })
-})
+}))

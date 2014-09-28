@@ -1,4 +1,4 @@
-require('../proof')(29, function (step, assert) {
+require('../proof')(29, require('cadence')(function (step, assert) {
     var Pseudo = require('../../http/pseudo'),
         UserAgent = require('../../http/ua'),
         Bouquet = require('../../net/bouquet'),
@@ -210,4 +210,4 @@ require('../proof')(29, function (step, assert) {
         assert(response.statusCode, 200, 'https fetch without pinned CA')
         bouquet.stop(step())
     })
-})
+}))

@@ -1,4 +1,4 @@
-require('../proof')(1, function (step, assert) {
+require('../proof')(1, require('cadence')(function (step, assert) {
     var stream = require('stream')
     var Pseudo = require('../../http/pseudo'),
         UserAgent = require('../../http/ua'),
@@ -23,4 +23,4 @@ require('../proof')(1, function (step, assert) {
     }, function () {
         bouquet.stop(step())
     })
-})
+}))

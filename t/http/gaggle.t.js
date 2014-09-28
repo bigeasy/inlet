@@ -1,4 +1,4 @@
-require('proof')(13, function (step, assert) {
+require('proof')(13, require('cadence')(function (step, assert) {
     var cadence = require('cadence'),
         Gaggle = require('../../http/gaggle'),
         UserAgent = require('../../http/ua')
@@ -63,4 +63,4 @@ require('proof')(13, function (step, assert) {
         assert(response.statusCode, 500, '500')
         server.close(step())
     })
-})
+}))
