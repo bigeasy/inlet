@@ -1,19 +1,19 @@
 {
-    "name":             "middleware",
+    "name":             "inlet",
     "version":          "0.0.0",
     "author":           "Alan Gutierrez <alan@prettyrobots.com>",
-    "description":      "Wink Hub publish/subscribe API.",
+    "description":      "A micro-framework for HTTP end points.",
     "keywords":
     [
-                        "wink", "quirky", "automation", "publish", "subscribe"
+                        "http", "https", "rest", "json", "curl"
     ],
     "contributors":     [],
-    "homepage":         "https://github.com/winkapp/wink-hub-api",
-    "bugs":             "https://github.com/winkapp/wink-hub-api/issues",
+    "homepage":         "https://github.com/bigeasy/inlet",
+    "bugs":             "https://github.com/bigeasy/inlet/issues",
     "repository":
     {
                         "type": "git",
-                        "url": "http://github.com/winkapp/wink-hub-api.git"
+                        "url": "http://github.com/bigeasy/inlet.git"
     },
     "dependencies":
     {
