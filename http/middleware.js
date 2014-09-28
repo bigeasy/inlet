@@ -115,7 +115,7 @@ exports.send = function (statusCode, headers, body) {
             headers: h,
             body: JSON.parse(body.toString())
         })
-        response.status(statusCode).headers(h).write(body)
+        response.status(statusCode).headers(h).end(body)
     }
 }
 
