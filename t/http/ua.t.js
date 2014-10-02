@@ -52,7 +52,7 @@ require('../proof')(29, require('cadence')(function (step, assert) {
             url: 'http://127.0.0.1:7779/here'
         }, {
             method: 'GET',
-            url: '/there'
+            url: '/there?1'
         }, step())
     }, function () {
         assert(pseudo.shift(), {
@@ -62,7 +62,7 @@ require('../proof')(29, require('cadence')(function (step, assert) {
                 host: '127.0.0.1:7779',
                 connection: 'keep-alive'
             },
-            url: '/there',
+            url: '/there?1',
             body: {}
         }, 'get')
         pseudo.push({ payload: {} })

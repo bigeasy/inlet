@@ -57,7 +57,6 @@ Psuedo.prototype.dispatch = function () {
             }
             var buffer = new Buffer(data.payload)
             data.headers['content-length'] = buffer.length
-            console.log(data)
             setTimeout(function () {
                 response.writeHeader(data.statusCode, data.headers)
                 response.end(data.payload)

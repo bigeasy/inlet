@@ -51,7 +51,11 @@ UserAgent.prototype.fetch = cadence(function (step) {
 
     request.options.hostname = request.url.hostname
     request.options.port = request.url.port
-    request.options.path = request.url.pathname
+    request.options.path = url.format({
+        pathname: request.url.pathname,
+        search: request.url.search,
+        hash: request.url.hash
+    })
 
     request.key = request.url.hostname + ':' + request.url.port
 
