@@ -1,6 +1,6 @@
 {
     "name":             "inlet",
-    "version":          "0.0.2",
+    "version":          "0.0.3",
     "author":           "Alan Gutierrez <alan@prettyrobots.com>",
     "description":      "A micro-framework for HTTP end points.",
     "keywords":
