@@ -42,16 +42,16 @@ function log (out, context, level, vargs) {
     }
 
     context.forEach(function(context1) {
-      var filter
+        var filter
 
-      if ((!object) || (!filters[context1]) || (!filters[context1][object.name])) return
+        if ((!object) || (!filters[context1]) || (!filters[context1][object.name])) return
 
-      filter = filters[context1][object.name]
-      f = { object:   function(object) { return undefined }
-//        , string:   for inquiry string & action
-          , function: filter
-          }[typeof filter]
-      if (!!f) object = f(object)
+        filter = filters[context1][object.name]
+        f = { object:   function(object) { return undefined }
+//          , string:   for inquiry string & action
+            , function: filter
+            }[typeof filter]
+        if (!!f) object = f(object)
     })
     if (!object) return
 
@@ -74,23 +74,23 @@ logger.filter = function(contexts, name, filter) {
     var deleteP = typeof filter === 'undefined'
 
     if ((!deleteP) && (typeof filter !== 'string') && (typeof filter !== 'function') && (filter === null)) {
-      throw new Error('invalid filter')
+        throw new Error('invalid filter')
     }
 
     contexts.split(/\./).forEach(function (context) {
-      if (!filters[context]) {
-          if (deleteP) return
-          filters[context] = {}
-      }
+        if (!filters[context]) {
+            if (deleteP) return
+            filters[context] = {}
+        }
 
-      if (!filters[context][name]) {
-          if (deleteP) return
-      } else if (deleteP) {
-          delete(filters[context][name])
-          return
-      }
+        if (!filters[context][name]) {
+            if (deleteP) return
+        } else if (deleteP) {
+            delete(filters[context][name])
+            return
+        }
 
-      filters[context][name] = filter
+        filters[context][name] = filter
     })
 }
 
