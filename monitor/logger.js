@@ -13,6 +13,7 @@ function log (out, context, level, vargs) {
         base = Date.now()
     }
     var object = {}
+    object.level = level
     object.context = context
     object.timestamp = new Date().toISOString()
     object.id = base + '/' + pad(number++)
@@ -46,11 +47,11 @@ function log (out, context, level, vargs) {
       if ((!object) || (!filters[context1]) || (!filters[context1][object.name])) return
 
       filter = filters[context1][object.name]
-      f = { object:   function(level, object) { return undefined }
+      f = { object:   function(object) { return undefined }
 //        , string:   for inquiry string & action
           , function: filter
           }[typeof filter]
-      if (!!f) object = f(level, object)
+      if (!!f) object = f(object)
     })
     if (!object) return
 
