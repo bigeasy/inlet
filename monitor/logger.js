@@ -61,7 +61,7 @@ function log (out, context, level, vargs) {
     }) + '\n')
 }
 
-logger = function (context, stdout) {
+var logger = function (context, stdout) {
     context = context.split(/\./)
     var object = {}
     'fatal error warn info debug trace'.split(/\s+/).forEach(function (level) {
