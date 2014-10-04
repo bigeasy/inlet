@@ -51,7 +51,7 @@ function log (out, context, level, vargs) {
 //          , string:   for inquiry string & action
             , function: filter
             }[typeof filter]
-        if (!!f) object = f(object)
+        if (!!f) try { object = f(object) } catch(ex) {}
     })
     if (!object) return
 
@@ -61,7 +61,7 @@ function log (out, context, level, vargs) {
     }) + '\n')
 }
 
-logger = function (context, stdout) {
+var logger = function (context, stdout) {
     context = context.split(/\./)
     var object = {}
     'fatal error warn info debug trace'.split(/\s+/).forEach(function (level) {
@@ -92,6 +92,8 @@ logger.filter = function(contexts, name, filter) {
 
         filters[context][name] = filter
     })
+
+    return logger
 }
 
 
