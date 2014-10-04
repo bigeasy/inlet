@@ -92,6 +92,8 @@ logger.filter = function(contexts, name, filter) {
 
         filters[context][name] = filter
     })
+
+    return logger
 }
 
 
