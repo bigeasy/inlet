@@ -147,7 +147,7 @@ UserAgent.prototype.fetch = cadence(function (step) {
                 logger.info('response', {
                     status: 'exceptional',
                     options: options,
-                    send: request.payload,
+                    sent: request.payload,
                     received: JSON.parse(body.toString()),
                     statusCode: response.statusCode,
                     headers: response.headers
