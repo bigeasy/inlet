@@ -51,7 +51,7 @@ function log (out, context, level, vargs) {
 //          , string:   for inquiry string & action
             , function: filter
             }[typeof filter]
-        if (!!f) try { object = f(object) } catch(ex) {}
+        if (!!f) object = f(object)
     })
     if (!object) return
 
