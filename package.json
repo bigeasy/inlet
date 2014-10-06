@@ -40,6 +40,6 @@
     },
     "scripts":
     {
-                        "test": "(proof run t/*/*.t.js | tee .proof.out | proof progress) || (proof errors < .proof.out) || exit 1"
+                        "test": "proof platform win32 && proof test */*/*.t.js || t/test"
     }
 }
