@@ -11,8 +11,12 @@ function HTTPError (code, data) {
     this.data = data
 }
 
-exports.dispatch = function (binder, structure, remote) {
+var newrelic;
+
+exports.dispatch = function (binder, structure, remote, nr, prefix) {
     if (!binder) throw new Error
+    newrelic = nr
+    if (!!nr) structure = reliquary(prefix, structure)
     return connect()
         .use(function (request, response, next) {
             request.binder = binder
@@ -45,6 +49,39 @@ exports.dispatch = function (binder, structure, remote) {
         .use(errorHandler())
 }
 
+function reliquary(prefix, structure) {
+    var result = {}
+
+    callback = function(prop) {
+        return function(request, response, next) {
+            var err, m, method
+
+            m = prop.indexOf(' ')
+            method = m > 0 ? prop.substr(0, m) : prop
+            newrelic.addCustomParameter('method', method)
+            try {
+                structure[prop](request, response, next)
+            } catch(ex) {
+                newrelic.noticeError(ex, {})
+                err = ex
+            }
+            newrelic.endTransaction()
+            if (!!err) throw(err)
+        }
+    }
+
+    for (var prop in structure) if (structure.hasOwnProperty(prop)) {
+        var p, path
+
+        p = prop.indexOf('/')
+        path = p !== -1 ? prop.substr(p + 1) : prop
+        if (!!prefix) path = prefix + '/' + path
+        result[prop] = newrelic.createWebTransaction(path, callback(prop))
+    }
+
+    return result
+}
+
 var jump = exports.jump = function (request, response, next) {
     request.raise = function (code, data) {
         if (typeof data == 'string') data = { message: data }
@@ -67,6 +104,8 @@ var handle = exports.handle = function (handler) {
     return function (request, response, next) {
         handler(request, function (error, result) {
             if (error) {
+                if (!!newrelic) newrelic.noticeError(error, {})
+
                 if (error instanceof HTTPError) {
                     response.status(error.code).json(error.data)
                 } else {
