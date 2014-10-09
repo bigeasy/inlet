@@ -18,7 +18,12 @@ require('../proof')(10, require('cadence')(function (step, assert) {
         return middleware.dispatch(this.binder, {
             'GET /guarded': middleware.authorize(authorize, this.guarded.bind(this)),
             'POST /token': middleware.handle(authenticator.tokenize)
-        })
+        }, null, {
+            addCustomParameter:   function (name, value) {},
+            noticeError:          function (err)         {},
+            createWebTransaction: function (url, handle) { return handle },
+            endTransaction:       function ()            {}
+        }, 'testing')
     }
 
     Service.prototype.guarded = function (request, callback) {

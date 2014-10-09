@@ -52,7 +52,7 @@ exports.dispatch = function (binder, structure, remote, nr, prefix) {
 function reliquary(prefix, structure) {
     var result = {}
 
-    callback = function(prop) {
+    var callback = function(prop) {
         return function(request, response, next) {
             var err, m, method
 
