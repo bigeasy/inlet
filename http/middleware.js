@@ -53,14 +53,14 @@ function reliquary(prefix, structure) {
     var result = {}
 
     var callback = function(prop) {
-        return function(request, response, next) {
+        return function(request, next) {
             var err, m, method
 
             m = prop.indexOf(' ')
             method = m > 0 ? prop.substr(0, m) : prop
             newrelic.addCustomParameter('method', method)
             try {
-                structure[prop](request, response, next)
+                structure[prop](request, next)
             } catch(ex) {
                 newrelic.noticeError(ex, {})
                 err = ex
