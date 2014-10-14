@@ -11,7 +11,7 @@ function HTTPError (code, data) {
     this.data = data
 }
 
-var newrelic;
+var newrelic
 
 exports.dispatch = function (binder, structure, remote, nr, prefix) {
     if (!binder) throw new Error
