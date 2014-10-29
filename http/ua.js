@@ -160,10 +160,7 @@ UserAgent.prototype.fetch = cadence(function (step) {
             }, function (body) {
                 var parsed = body
                 var display = null
-// Greenwave server returns "Content-Type:: application/json"
-                var ct = response.headers['content-type']
-                if ((!!ct) && (ct.indexOf(':') === 0))ct = ct.substr(1).trim()
-                var type = typer.parse(ct || 'application/octet-stream')
+                var type = typer.parse(response.headers['content-type'] || 'application/octet-stream')
                 switch (type.type + '/' + type.subtype) {
                 case 'application/json':
                     display = parsed = JSON.parse(body)
