@@ -109,7 +109,7 @@ var handle = exports.handle = function (handler) {
                 if (error instanceof HTTPError) {
                     response.status(error.code).json(error.data)
                 } else if (!next) {
-                    logger.info('error', error)
+                    logger.error('error', error)
                 } else {
                     next(error)
                 }
