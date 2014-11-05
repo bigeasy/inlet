@@ -142,11 +142,6 @@ function log (context, level, vargs) {
     })
     if (!object) return
 
-// temporary, until @bigeasy can take a look...
-console.log(JSON.stringify(object, function (key, value) {
-    if (key == 'tls') return true
-    return value
-}))
     queue.entries.push(JSON.stringify(object, function (key, value) {
         if (key == 'tls') return true
         return value
@@ -191,3 +186,5 @@ module.exports.filter = function(contexts, name, filter) {
 
     return module.exports
 }
+
+module.exports.context = {}
