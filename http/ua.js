@@ -112,7 +112,7 @@ UserAgent.prototype.fetch = cadence(function (step) {
         } else {
             http = require('http')
         }
-        http.globalAgent.maxSockets = 50
+        http.globalAgent.maxSockets = 5000
         var payload = request.payload
         if (payload && !Buffer.isBuffer(payload)) {
             payload = new Buffer(JSON.stringify(payload))
