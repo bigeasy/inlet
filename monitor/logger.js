@@ -101,6 +101,7 @@ function log (context, level, vargs) {
         base = Date.now()
     }
     var object = {}
+    object.level = level
     object.context = context
     object.timestamp = new Date().toISOString()
     object.id = base + '/' + pad(number++)
