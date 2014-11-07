@@ -32,6 +32,7 @@
                         "accum":                "0.3.6",
                         "utf8-stream":          "0.0.0",
                         "through":              "2.3.6",
+                        "staccato":             "0.0.5",
                         "newrelic":             ">= 1.11.3"
     },
     "devDependencies":
