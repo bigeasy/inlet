@@ -6,9 +6,10 @@ var connect = require('connect'),
     errorHandler = require('errorhandler'),
     logger = require('../monitor/logger')('http.middleware')
 
-function HTTPError (code, data) {
+function HTTPError (code, message, headers) {
     this.code = code
-    this.data = data
+    this.message = message
+    this.headers = headers || {}
 }
 
 var newrelic
@@ -83,9 +84,8 @@ function reliquary(prefix, structure) {
 }
 
 var jump = exports.jump = function (request, response, next) {
-    request.raise = function (code, data) {
-        if (typeof data == 'string') data = { message: data }
-        throw new HTTPError(code, data)
+    request.raise = function (code, message, headers) {
+        throw new HTTPError(code, message, headers)
     }
     next()
 }
@@ -107,7 +107,7 @@ var handle = exports.handle = function (handler) {
                 if (!!newrelic) newrelic.noticeError(error, {})
 
                 if (error instanceof HTTPError) {
-                    response.status(error.code).json(error.data)
+                    response.status(error.code).headers(error.headers).json({ message: error.message })
                 } else if (!next) {
                     logger.error('error', { message: error.message, stack: error.stack })
                 } else {
