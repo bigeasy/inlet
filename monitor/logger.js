@@ -106,7 +106,7 @@ function log (context, level, vargs) {
     object.timestamp = new Date().toISOString()
     object.id = base + '/' + pad(number++)
     object.name = vargs.shift()
-    var tags = []
+    var tags = module.exports.tags || []
     TAGS: while (vargs.length) {
         switch (typeof vargs[0]) {
         case 'string':
@@ -189,3 +189,4 @@ module.exports.filter = function(contexts, name, filter) {
 }
 
 module.exports.context = {}
+module.exports.tags = []
