@@ -62,7 +62,7 @@ Queue.prototype.pump = cadence(function (async) {
 //      logger.info('pump', 'written', message)
 
         if (offset < 0) {
-//          logger.error('pump', 'overflow')
+            logger.error('pump', 'overflow')
             logger.hush = true
         }
 
@@ -106,7 +106,7 @@ function log (context, level, vargs) {
     object.timestamp = new Date().toISOString()
     object.id = base + '/' + pad(number++)
     object.name = vargs.shift()
-    var tags = module.exports.tags || []
+    var tags = [].concat(module.exports.tags)
     TAGS: while (vargs.length) {
         switch (typeof vargs[0]) {
         case 'string':
