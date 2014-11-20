@@ -62,7 +62,7 @@ Queue.prototype.pump = cadence(function (async) {
 //      logger.info('pump', 'written', message)
 
         if (offset < 0) {
-            logger.error('pump', 'overflow')
+//          logger.error('pump', 'overflow')
             logger.hush = true
         }
 

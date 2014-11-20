@@ -12,7 +12,7 @@ Bouquet.prototype.start = cadence(function (step, object) {
     if (!vargs[0]) vargs.shift()
     var server = protocol.createServer.apply(protocol, vargs)
     server.listen(object.binder.port, step())
-    logger.info('', { event: 'listen', binder: object.binder })
+    logger.info('connection', { event: 'listen', binder: object.binder })
     this._servers.push(server)
     server.on('connection', function (socket) {
         logger.debug('connection', {
