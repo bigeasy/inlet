@@ -134,7 +134,7 @@ function log (context, level, vargs) {
 
         if ((!object) || (!filters[context1]) || ((!filters[context1][object.name]) && (!filters[context1]['*']))) return
 
-        filter = filters[context1][object.name]
+        filter = filters[context1][object.name] || filters[context1]['*']
         f = { object:   function(object) { return undefined }
 //          , string:   for inquiry string & action
             , function: filter
