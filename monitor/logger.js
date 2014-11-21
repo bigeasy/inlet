@@ -132,7 +132,7 @@ function log (context, level, vargs) {
     context.forEach(function(context1) {
         var f, filter
 
-        if ((!object) || (!filters[context1]) || (!filters[context1][object.name])) return
+        if ((!object) || (!filters[context1]) || ((!filters[context1][object.name]) && (!filters[context1]['*']))) return
 
         filter = filters[context1][object.name]
         f = { object:   function(object) { return undefined }
