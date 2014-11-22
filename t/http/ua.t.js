@@ -1,4 +1,4 @@
-require('../proof')(29, require('cadence')(function (step, assert) {
+require('../proof')(30, require('cadence')(function (step, assert) {
     var Pseudo = require('../../http/pseudo'),
         UserAgent = require('../../http/ua'),
         Bouquet = require('../../net/bouquet'),
@@ -65,6 +65,24 @@ require('../proof')(29, require('cadence')(function (step, assert) {
             url: '/there?1',
             body: {}
         }, 'get')
+        pseudo.clear()
+        ua.fetch([{
+            url: 'http://127.0.0.1:7779/here'
+        }, {
+            method: 'GET',
+            url: '/there?1'
+        }], step())
+    }, function () {
+        assert(pseudo.shift(), {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                host: '127.0.0.1:7779',
+                connection: 'keep-alive'
+            },
+            url: '/there?1',
+            body: {}
+        }, 'get array override')
         pseudo.push({ payload: {} })
         ua.fetch({
             url: 'http://127.0.0.1:7779/here'

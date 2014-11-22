@@ -17,29 +17,34 @@ UserAgent.prototype.fetch = cadence(function (step) {
     var request = {
         options: { headers: {} }
     }
-    __slice.call(arguments, 1).forEach(function (override) {
-        if (override instanceof Binder) {
-            override = { url: override.location, ca: (override.tls || {}).ca }
-        }
-        for (var key in override) {
-            if (key == 'url') {
-                if (request.options.url) {
-                    request.options.url = url.resolve(request.options.url, override.url)
+    function override (object) {
+        if (Array.isArray(object)) {
+            object.forEach(override)
+        } else {
+            if (object instanceof Binder) {
+                object = { url: object.location, ca: (object.tls || {}).ca }
+            }
+            for (var key in object) {
+                if (key == 'url') {
+                    if (request.options.url) {
+                        request.options.url = url.resolve(request.options.url, object.url)
+                    } else {
+                        request.options[key] = object[key]
+                        request.baseUrl = url.parse(object.url)
+                    }
+                } else if (key == 'headers') {
+                    for (var header in object.headers) {
+                        request.options.headers[header.toLowerCase()] = object.headers[header]
+                    }
+                } else if (/^(context|payload|grant|token|timeout)$/.test(key)) {
+                    request[key] = object[key]
                 } else {
-                    request.options[key] = override[key]
-                    request.baseUrl = url.parse(override.url)
+                    request.options[key] = object[key]
                 }
-            } else if (key == 'headers') {
-                for (var header in override.headers) {
-                    request.options.headers[header.toLowerCase()] = override.headers[header]
-                }
-            } else if (/^(context|payload|grant|token|timeout)$/.test(key)) {
-                request[key] = override[key]
-            } else {
-                request.options[key] = override[key]
             }
         }
-    })
+    }
+    __slice.call(arguments, 1).forEach(override)
     if (!request.options.method) {
         request.options.method = request.payload ? 'POST' : 'GET'
     }

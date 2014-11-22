@@ -1,4 +1,5 @@
 ### Issue by Issue
 
+ * Override `fetch` with an array of override objects. #31.
  * Add optional headers to `raise`. #27.
  * Upgrade Proof to 0.0.50. #6.
