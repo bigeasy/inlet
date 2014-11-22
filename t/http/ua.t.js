@@ -1,4 +1,4 @@
-require('../proof')(30, require('cadence')(function (step, assert) {
+require('../proof')(31, require('cadence')(function (step, assert) {
     var Pseudo = require('../../http/pseudo'),
         UserAgent = require('../../http/ua'),
         Bouquet = require('../../net/bouquet'),
@@ -10,6 +10,15 @@ require('../proof')(30, require('cadence')(function (step, assert) {
         ua = new UserAgent
 
     step(function () {
+        var ua = new UserAgent(false)
+        step(function () {
+            ua.fetch({
+                url: 'http://127.0.0.1:9999/here',
+            }, step())
+        }, function (body, response) {
+            assert(response.statusCode, 599, 'no logging refused status')
+        })
+    }, function () {
         bouquet.start(pseudo, step())
     }, function () {
         ua.fetch({

@@ -1,5 +1,6 @@
 ### Issue by Issue
 
+ * Test logging off switch in `UserAgent`. #32.
  * Override `fetch` with an array of override objects. #31.
  * Add optional headers to `raise`. #27.
  * Upgrade Proof to 0.0.50. #6.

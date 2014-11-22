@@ -17,6 +17,7 @@ UserAgent.prototype.fetch = cadence(function (step) {
     var request = {
         options: { headers: {} }
     }
+
     function override (object) {
         if (Array.isArray(object)) {
             object.forEach(override)
@@ -44,6 +45,13 @@ UserAgent.prototype.fetch = cadence(function (step) {
             }
         }
     }
+
+    function log (name, object) {
+        if (this._log) {
+            logger.info(name, object, request.context || {})
+        }
+    }
+
     __slice.call(arguments, 1).forEach(override)
     if (!request.options.method) {
         request.options.method = request.payload ? 'POST' : 'GET'
@@ -105,13 +113,11 @@ UserAgent.prototype.fetch = cadence(function (step) {
                 options[key] = request.options[key]
             }
         }
-        if (this._log) {
-            logger.info('request', {
-                url: request.url,
-                options: options,
-                sent: request.payload
-            }, request.context || {})
-        }
+        log.call(this, 'request', {
+            url: request.url,
+            options: options,
+            sent: request.payload
+        })
         if (request.url.protocol == 'https:') {
             http = require('https')
         } else {
@@ -148,16 +154,14 @@ UserAgent.prototype.fetch = cadence(function (step) {
                     'content-type': 'application/json'
                 }
             }
-            if (this._log) {
-                logger.info('response', {
-                    status: 'exceptional',
-                    options: options,
-                    sent: request.payload,
-                    received: JSON.parse(body.toString()),
-                    statusCode: response.statusCode,
-                    headers: response.headers
-                }, request.context || {})
-            }
+            log.call(this, 'response', {
+                status: 'exceptional',
+                options: options,
+                sent: request.payload,
+                received: JSON.parse(body.toString()),
+                statusCode: response.statusCode,
+                headers: response.headers
+            })
             return [ fetch, JSON.parse(body.toString()), response, body ]
         }], function (response) {
             step(function () {
@@ -176,16 +180,14 @@ UserAgent.prototype.fetch = cadence(function (step) {
                     break
                 }
                 response.okay = Math.floor(response.statusCode / 100) == 2
-                if (this._log) {
-                    logger.info('response', {
-                        status: 'responded',
-                        options: options,
-                        sent: request.payload,
-                        received: display,
-                        statusCode: response.statusCode,
-                        headers: response.headers
-                    }, request.context || {})
-                }
+                log.call(this, 'response', {
+                    status: 'responded',
+                    options: options,
+                    sent: request.payload,
+                    received: display,
+                    statusCode: response.statusCode,
+                    headers: response.headers
+                })
                 return [ parsed, response, body ]
             })
         })(1)
