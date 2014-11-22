@@ -101,7 +101,7 @@ UserAgent.prototype.fetch = cadence(function (step) {
             }
         }
         if (this._log) {
-            logger.info('request', {
+            logger.debug('request', {
                 url: request.url,
                 options: options,
                 sent: request.payload
@@ -172,7 +172,7 @@ UserAgent.prototype.fetch = cadence(function (step) {
                 }
                 response.okay = Math.floor(response.statusCode / 100) == 2
                 if (this._log) {
-                    logger.info('response', {
+                    logger.debug('response', {
                         status: 'responded',
                         options: options,
                         sent: request.payload,
