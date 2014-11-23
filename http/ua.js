@@ -48,7 +48,7 @@ UserAgent.prototype.fetch = cadence(function (step) {
 
     function log (name, object) {
         if (this._log) {
-            logger.info(name, object, request.context || {})
+            logger.debug(name, object, request.context || {})
         }
     }
 

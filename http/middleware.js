@@ -34,7 +34,7 @@ exports.dispatch = function (binder, structure, remote, nr, prefix) {
                     port: request.headers['x-forwarded-port'] || request.socket.remotePort
                 }
             }
-            logger.info('request', {
+            logger.debug('request', {
                 headers: request.headers
             }, request.context)
             next()

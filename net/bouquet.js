@@ -11,6 +11,7 @@ Bouquet.prototype.start = cadence(function (step, object) {
     var vargs = [ object.binder.tls, object.dispatch(object.binder) ]
     if (!vargs[0]) vargs.shift()
     var server = protocol.createServer.apply(protocol, vargs)
+    logger.info('connection', { event: 'listen', binder: object.binder })
     server.listen(object.binder.port, step())
     this._servers.push(server)
     server.on('connection', function (socket) {

@@ -59,7 +59,7 @@ Queue.prototype.pump = cadence(function (async) {
 
         previous = message.next = next
 
-        logger.info('pump', 'written', message)
+//      logger.info('pump', 'written', message)
 
         if (offset < 0) {
             logger.error('pump', 'overflow')
@@ -106,7 +106,7 @@ function log (context, level, vargs) {
     object.timestamp = new Date().toISOString()
     object.id = base + '/' + pad(number++)
     object.name = vargs.shift()
-    var tags = []
+    var tags = [].concat(module.exports.tags)
     TAGS: while (vargs.length) {
         switch (typeof vargs[0]) {
         case 'string':
@@ -132,9 +132,9 @@ function log (context, level, vargs) {
     context.forEach(function(context1) {
         var f, filter
 
-        if ((!object) || (!filters[context1]) || (!filters[context1][object.name])) return
+        if ((!object) || (!filters[context1]) || ((!filters[context1][object.name]) && (!filters[context1]['*']))) return
 
-        filter = filters[context1][object.name]
+        filter = filters[context1][object.name] || filters[context1]['*']
         f = { object:   function(object) { return undefined }
 //          , string:   for inquiry string & action
             , function: filter
@@ -189,3 +189,4 @@ module.exports.filter = function(contexts, name, filter) {
 }
 
 module.exports.context = {}
+module.exports.tags = []
