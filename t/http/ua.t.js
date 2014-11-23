@@ -1,4 +1,4 @@
-require('../proof')(31, require('cadence')(function (step, assert) {
+require('../proof')(32, require('cadence')(function (step, assert) {
     var Pseudo = require('../../http/pseudo'),
         UserAgent = require('../../http/ua'),
         Bouquet = require('../../net/bouquet'),
@@ -225,16 +225,20 @@ require('../proof')(31, require('cadence')(function (step, assert) {
     }, function () {
 // SSL!
         bouquet = new Bouquet
-        pseudo = new Pseudo(new Binder('http://127.0.0.1:7779', pems))
+        pseudo = new Pseudo(new Binder('https://127.0.0.1:7779', pems))
         bouquet.start(pseudo, step())
     }, function () {
         ua.fetch(pseudo.binder, step())
     }, function (body, response) {
         assert(response.statusCode, 200, 'https code')
         assert(body, { message: 'Hello, World!' }, 'https body')
+        pseudo.clear()
         ua.fetch({ url: 'https://www.google.com/' }, step())
     }, function (body, response) {
         assert(response.statusCode, 200, 'https fetch without pinned CA')
+        ua.fetch(pseudo.binder, { agent: false }, step())
+    }, function () {
+        assert(pseudo.shift().headers.connection, 'close', 'connection close')
         bouquet.stop(step())
     })
 }))
