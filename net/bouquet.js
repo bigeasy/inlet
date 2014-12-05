@@ -12,7 +12,11 @@ Bouquet.prototype.start = cadence(function (step, object) {
     if (!vargs[0]) vargs.shift()
     var server = protocol.createServer.apply(protocol, vargs)
     logger.info('connection', { event: 'listen', binder: object.binder })
-    server.listen(object.binder.port, step())
+    if (object.binder.hostname === '127.0.0.1') {
+        server.listen(object.binder.port, object.binder.hostname, step())
+    } else {
+        server.listen(object.binder.port, step())
+    }
     this._servers.push(server)
     server.on('connection', function (socket) {
         logger.debug('connection', {
