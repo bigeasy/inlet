@@ -188,6 +188,9 @@ UserAgent.prototype.fetch = cadence(function (step) {
                     statusCode: response.statusCode,
                     headers: response.headers
                 })
+                if (request.grant == 'cc' && response.statusCode == 401) {
+                    delete this._tokens[request.key]
+                }
                 return [ parsed, response, body ]
             })
         })(1)
