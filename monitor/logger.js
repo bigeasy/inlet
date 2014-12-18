@@ -120,6 +120,7 @@ function log (context, level, vargs) {
         vargs.shift()
     }
     object.tags = tags
+    vargs.unshift(module.exports.context)
     while (vargs.length) {
         var properties = vargs.shift()
         if (typeof properties == 'object') {
