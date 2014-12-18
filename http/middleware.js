@@ -107,6 +107,17 @@ var handle = exports.handle = function (handler) {
                 if (!!newrelic) newrelic.noticeError(error, {})
 
                 if (error instanceof HTTPError) {
+                    logger.info('http', {
+                        statusCode: error.code,
+                        request: {
+                            headers: request.headers,
+                            url: request.url
+                        },
+                        response: {
+                            statusCode: error.code,
+                            data: error.data
+                        }
+                    })
                     response.status(error.code).headers(error.headers).json({ message: error.message })
                 } else if (!next) {
                     logger.error('error', { message: error.message, stack: error.stack })
@@ -114,6 +125,17 @@ var handle = exports.handle = function (handler) {
                     next(error)
                 }
             } else {
+                logger.info('http', {
+                    statusCode: 200,
+                    request: {
+                        headers: request.headers,
+                        url: request.url
+                    },
+                    response: {
+                        statusCode: 200,
+                        payload: result
+                    }
+                })
                 switch (typeof result) {
                 case 'function':
                     result(response)
