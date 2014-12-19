@@ -6,11 +6,24 @@ var logger = require('../monitor/logger')('http.ua')
 var Binder = require('../net/binder')
 var typer = require('media-typer')
 var accum = require('accum')
+var Window = require('../monitor/window')
 var __slice = [].slice
 
 function UserAgent (log) {
     this._log = arguments.length == 0 ? true : log
     this._tokens = {}
+}
+
+UserAgent.durations = {
+    1: new Window(60000),
+    5: new Window(300000),
+    15: new Window(900000)
+}
+
+function collectAverages (time) {
+    for (var key in UserAgent.durations) {
+       UserAgent.durations[key].sample(time)
+    }
 }
 
 UserAgent.prototype.fetch = cadence(function (step) {
@@ -131,6 +144,8 @@ UserAgent.prototype.fetch = cadence(function (step) {
         if (payload) {
             request.options.headers['content-length'] = payload.length
         }
+
+        var stopwatch = Date.now()
         var fetch = step([function () {
             var client = http.request(request.options, step(null))
                              .on('error', step(Error))
@@ -144,6 +159,7 @@ UserAgent.prototype.fetch = cadence(function (step) {
             }
             client.end()
         }, function (errors, error) {
+            collectAverages(Date.now() - stopwatch)
             var body = new Buffer(JSON.stringify({ message: error.message, errno: error.code }))
             var response = {
                 statusCode: 599,
@@ -167,6 +183,7 @@ UserAgent.prototype.fetch = cadence(function (step) {
             step(function () {
                 response.pipe(accum(step(null)))
             }, function (body) {
+                collectAverages(Date.now() - stopwatch)
                 var parsed = body
                 var display = null
                 var type = typer.parse(response.headers['content-type'] || 'application/octet-stream')
