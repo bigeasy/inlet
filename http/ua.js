@@ -15,9 +15,9 @@ function UserAgent (log) {
 }
 
 UserAgent.durations = {
-    1: new Window(6000),
-    5: new Window(30000),
-    15: new Window(90000)
+    1: new Window(60000),
+    5: new Window(300000),
+    15: new Window(900000)
 }
 
 function collectAverages (time) {
@@ -157,9 +157,7 @@ UserAgent.prototype.fetch = cadence(function (step) {
                     client.abort()
                 })
             }
-
             client.end()
-
         }, function (errors, error) {
             collectAverages(Date.now() - stopwatch)
             var body = new Buffer(JSON.stringify({ message: error.message, errno: error.code }))
@@ -180,8 +178,6 @@ UserAgent.prototype.fetch = cadence(function (step) {
                 statusCode: response.statusCode,
                 headers: response.headers
             })
-
-
             return [ fetch, JSON.parse(body.toString()), response, body ]
         }], function (response) {
             step(function () {
