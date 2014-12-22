@@ -8,9 +8,11 @@ function prove (assert) {
     assert(metric.stats,  null , 'stats')
     metric.sample(1)
     metric.sample(2)
+    metric.sample(2)
+    metric.sample(2)
     metric.sample(3)
-    assert(metric.stats, { average: 2 }, 'stats')
+    assert(metric.stats, { average: 2, min: 1, max: 3 }, 'stats')
     time = 6002
     metric.sample(4)
-    assert(metric.stats, { average: 4 }, 'stats')
+    assert(metric.stats, { average: 4, min:4, max: 4 }, 'stats')
 }
