@@ -1,5 +1,6 @@
 ### Issue by Issue
 
+ * Upgrade Cadence to 0.0.52. #44.
  * Specify `Agent` in override object. #34.
  * Test logging off switch in `UserAgent`. #32.
  * Override `fetch` with an array of override objects. #31.

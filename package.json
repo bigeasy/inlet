@@ -20,7 +20,7 @@
                         "media-typer":          "0.2.0",
                         "raw-body":             "1.2.2",
                         "underscore":           "1.6.0",
-                        "cadence":              "0.0.43",
+                        "cadence":              "0.0.52",
                         "connect":              "3.0.1",
                         "quip":                 "0.1.2",
                         "dispatch":             "1.0.0",
