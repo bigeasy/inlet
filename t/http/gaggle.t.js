@@ -1,4 +1,6 @@
-require('proof')(13, require('cadence')(function (step, assert) {
+require('proof')(13, require('cadence')(prove))
+
+function prove (async, assert) {
     var cadence = require('cadence'),
         Gaggle = require('../../http/gaggle'),
         UserAgent = require('../../http/ua')
@@ -40,27 +42,27 @@ require('proof')(13, require('cadence')(function (step, assert) {
     assert(Gaggle.order('a', 'b'), -1, 'string less than')
     assert(Gaggle.order('b', 'a'), 1, 'string greater than')
 
-    step(function () {
-        server.listen(7776, step())
+    async(function () {
+        server.listen(7776, async())
     }, function () {
-        ua.fetch(session, { url: '/connect' }, step())
+        ua.fetch(session, { url: '/connect' }, async())
     }, function (body, response) {
         assert(body, { id: 1 }, 'connect')
-        ua.fetch(session, { url: '/list' }, step())
+        ua.fetch(session, { url: '/list' }, async())
     }, function (body, response) {
         assert(body, [{ id: 1, token: 'z' }], 'list')
-        ua.fetch(session, { url: '/1/honk' }, step())
+        ua.fetch(session, { url: '/1/honk' }, async())
     }, function (body, response) {
         assert(body, { honked: true }, 'honk')
-        ua.fetch(session, { url: '/1/nil' }, step())
+        ua.fetch(session, { url: '/1/nil' }, async())
     }, function (body, response) {
         assert(body, {}, 'honk')
-        ua.fetch(session, { url: '/1/quack' }, step())
+        ua.fetch(session, { url: '/1/quack' }, async())
     }, function (body, response) {
         assert(response.statusCode, 404, '404')
-        ua.fetch(session, { url: '/1/abend' }, step())
+        ua.fetch(session, { url: '/1/abend' }, async())
     }, function (body, response) {
         assert(response.statusCode, 500, '500')
-        server.close(step())
+        server.close(async())
     })
-}))
+}

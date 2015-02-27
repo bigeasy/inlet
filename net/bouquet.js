@@ -6,13 +6,13 @@ function Bouquet () {
     this._servers = []
 }
 
-Bouquet.prototype.start = cadence(function (step, object) {
+Bouquet.prototype.start = cadence(function (async, object) {
     var protocol = require(object.binder.protocol.replace(/:$/, ''))
     var vargs = [ object.binder.tls, object.dispatch(object.binder) ]
     if (!vargs[0]) vargs.shift()
     var server = protocol.createServer.apply(protocol, vargs)
     logger.info('connection', { event: 'listen', binder: object.binder })
-    server.listen(object.binder.port, step())
+    server.listen(object.binder.port, async())
     this._servers.push(server)
     server.on('connection', function (socket) {
         logger.debug('connection', {
@@ -27,9 +27,9 @@ Bouquet.prototype.merge = function (bouquet) {
     bouquet._servers.length = 0
 }
 
-Bouquet.prototype.stop = cadence(function (step) {
-    step(function (server) {
-        server.close(step())
+Bouquet.prototype.stop = cadence(function (async) {
+    async(function (server) {
+        server.close(async())
     })(this._servers)
 })
 

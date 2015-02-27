@@ -1,4 +1,6 @@
-require('../proof')(32, require('cadence')(function (step, assert) {
+require('../proof')(32, require('cadence')(prove))
+
+function prove (async, assert) {
     var Pseudo = require('../../http/pseudo'),
         UserAgent = require('../../http/ua'),
         Bouquet = require('../../net/bouquet'),
@@ -9,28 +11,28 @@ require('../proof')(32, require('cadence')(function (step, assert) {
         bouquet = new Bouquet,
         ua = new UserAgent
 
-    step(function () {
+    async(function () {
         var ua = new UserAgent(false)
-        step(function () {
+        async(function () {
             ua.fetch({
                 url: 'http://127.0.0.1:9999/here',
-            }, step())
+            }, async())
         }, function (body, response) {
             assert(response.statusCode, 599, 'no logging refused status')
         })
     }, function () {
-        bouquet.start(pseudo, step())
+        bouquet.start(pseudo, async())
     }, function () {
         ua.fetch({
             url: 'http://127.0.0.1:9999/here',
-        }, step())
+        }, async())
     }, function (body, response) {
         assert(response.statusCode, 599, 'refused status')
         assert(response.errno, 'ECONNREFUSED', 'refused errno')
         assert(body, { message: 'connect ECONNREFUSED', errno: 'ECONNREFUSED' }, 'refused body')
         ua.fetch({
             url: 'http://127.0.0.1:9999/here',
-        }, step())
+        }, async())
     }, function (body, response, buffer) {
         assert(response.statusCode, 599, 'unparsed refused status')
         assert(response.errno, 'ECONNREFUSED', 'unparsed refused errno')
@@ -39,7 +41,7 @@ require('../proof')(32, require('cadence')(function (step, assert) {
         ua.fetch({
             grant: 'cc',
             url: 'http://a:z@127.0.0.1:9999/here',
-        }, step())
+        }, async())
     }, function (body, response, buffer) {
         assert(response.statusCode, 599, 'unparsed refused cc status')
         assert(response.errno, 'ECONNREFUSED', 'unparsed refused cc errno')
@@ -51,7 +53,7 @@ require('../proof')(32, require('cadence')(function (step, assert) {
         ua.fetch({
             url: 'http://127.0.0.1:7779/here',
             timeout: 250
-        }, step())
+        }, async())
     }, function (body, response) {
         assert(response.statusCode, 599, 'timeout status')
         assert(response.errno, 'ECONNRESET', 'timeout errno')
@@ -62,7 +64,7 @@ require('../proof')(32, require('cadence')(function (step, assert) {
         }, {
             method: 'GET',
             url: '/there?1'
-        }, step())
+        }, async())
     }, function () {
         assert(pseudo.shift(), {
             method: 'GET',
@@ -80,7 +82,7 @@ require('../proof')(32, require('cadence')(function (step, assert) {
         }, {
             method: 'GET',
             url: '/there?1'
-        }], step())
+        }], async())
     }, function () {
         assert(pseudo.shift(), {
             method: 'GET',
@@ -98,7 +100,7 @@ require('../proof')(32, require('cadence')(function (step, assert) {
         }, {
             method: 'GET',
             url: '/there'
-        }, step())
+        }, async())
     }, function (body, response, buffer) {
         assert(buffer.toString(), '{}\n', 'unparsed')
     }, function () {
@@ -112,7 +114,7 @@ require('../proof')(32, require('cadence')(function (step, assert) {
             headers: {
                 greeting: 'Hello, World!'
             }
-        }, step())
+        }, async())
     }, function () {
         assert(pseudo.shift(), {
             method: 'POST',
@@ -136,7 +138,7 @@ require('../proof')(32, require('cadence')(function (step, assert) {
         }, {
             method: 'GET',
             url: '/there'
-        }, step())
+        }, async())
     }, function () {
         assert(pseudo.shift().headers['content-type'] == null, 'null content-type')
         pseudo.push({
@@ -146,7 +148,7 @@ require('../proof')(32, require('cadence')(function (step, assert) {
             },
             payload: 'Hello, World!'
         })
-        ua.fetch({ url: 'http://127.0.0.1:7779' }, step())
+        ua.fetch({ url: 'http://127.0.0.1:7779' }, async())
     }, function (body, response) {
         assert(body.toString(), 'Hello, World!', 'text')
         assert(response.headers['content-type'], 'text/plain', 'text content-type')
@@ -157,7 +159,7 @@ require('../proof')(32, require('cadence')(function (step, assert) {
             },
             payload: 'Hello, World!'
         })
-        ua.fetch({ url: 'http://127.0.0.1:7779' }, step())
+        ua.fetch({ url: 'http://127.0.0.1:7779' }, async())
     }, function (body, response) {
         assert(body.toString(), 'Hello, World!', 'html')
         assert(response.headers['content-type'], 'text/html', 'html content-type')
@@ -168,7 +170,7 @@ require('../proof')(32, require('cadence')(function (step, assert) {
             },
             payload: 'Hello, World!'
         })
-        ua.fetch({ url: 'http://127.0.0.1:7779' }, step())
+        ua.fetch({ url: 'http://127.0.0.1:7779' }, async())
     }, function (body, response) {
         assert(body.toString(), 'Hello, World!', 'unknown')
         assert(response.headers['content-type'], 'application/octet-stream', 'unknown content-type')
@@ -178,7 +180,7 @@ require('../proof')(32, require('cadence')(function (step, assert) {
         }, {
             grant: 'cc',
             url: '/there',
-        }, step())
+        }, async())
     }, function (body, response) {
         assert(response.statusCode, 401, 'bad authentication')
         pseudo.clear()
@@ -193,7 +195,7 @@ require('../proof')(32, require('cadence')(function (step, assert) {
         }, {
             grant: 'cc',
             url: '/there',
-        }, step())
+        }, async())
     }, function (body, response) {
         assert(response.statusCode, 200, 'good authentication')
         assert(pseudo.shift(), {
@@ -221,24 +223,24 @@ require('../proof')(32, require('cadence')(function (step, assert) {
             body: {}
         }, 'request with token')
     }, function () {
-        bouquet.stop(step())
+        bouquet.stop(async())
     }, function () {
 // SSL!
         bouquet = new Bouquet
         pseudo = new Pseudo(new Binder('https://127.0.0.1:7779', pems))
-        bouquet.start(pseudo, step())
+        bouquet.start(pseudo, async())
     }, function () {
-        ua.fetch(pseudo.binder, step())
+        ua.fetch(pseudo.binder, async())
     }, function (body, response) {
         assert(response.statusCode, 200, 'https code')
         assert(body, { message: 'Hello, World!' }, 'https body')
         pseudo.clear()
-        ua.fetch({ url: 'https://www.google.com/' }, step())
+        ua.fetch({ url: 'https://www.google.com/' }, async())
     }, function (body, response) {
         assert(response.statusCode, 200, 'https fetch without pinned CA')
-        ua.fetch(pseudo.binder, { agent: false }, step())
+        ua.fetch(pseudo.binder, { agent: false }, async())
     }, function () {
         assert(pseudo.shift().headers.connection, 'close', 'connection close')
-        bouquet.stop(step())
+        bouquet.stop(async())
     })
-}))
+}

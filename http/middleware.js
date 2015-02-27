@@ -153,13 +153,13 @@ var handle = exports.handle = function (handler) {
 }
 
 exports.authorize = function (authorizer, handler) {
-    return handle(cadence(function (step, request) {
-        step(function () {
-            authorizer(request, step())
+    return handle(cadence(function (async, request) {
+        async(function () {
+            authorizer(request, async())
         }, function (identity) {
             if (identity) {
                 request.authorization.identity = identity
-                handler(request, step())
+                handler(request, async())
             } else {
                 request.raise(401, 'Forbidden')
             }

@@ -9,16 +9,16 @@ var logger = require('../monitor/logger')('http.server')
 function handle (object, authenticator, options) {
     var authorize = options.open ? (function (request, callback) {
         object[options.method](request.body, request, callback)
-    }) : cadence(function (step, request) {
-        step(function () {
+    }) : cadence(function (async, request) {
+        async(function () {
             if (request.authorization && request.authorization.scheme == 'Bearer') {
-                authenticator.authenticate(request.authorization.credentials, request, step())
+                authenticator.authenticate(request.authorization.credentials, request, async())
             } else {
                 return null
             }
         }, function (id) {
             if (id || options.unauthorized) {
-                object[options.method](request.body, id, request, step())
+                object[options.method](request.body, id, request, async())
             } else {
                 return function (response) {
                     response.header('WWW-Authenticate', 'Bearer realm="Wink"')
@@ -27,9 +27,9 @@ function handle (object, authenticator, options) {
             }
         })
     })
-    var handler = cadence(function (step, request, response) {
-        step(function () {
-            authorize(request, step())
+    var handler = cadence(function (async, request, response) {
+        async(function () {
+            authorize(request, async())
         }, function (body) {
             if (typeof body == 'function') {
                 body(response, request)
@@ -60,14 +60,14 @@ function Authenticator (binder) {
     this._tokens = {}
 }
 
-Authenticator.prototype.token = cadence(function (step, body, request) {
-    step(function () {
+Authenticator.prototype.token = cadence(function (async, body, request) {
+    async(function () {
         var auth = new Buffer(this._binder.auth).toString('base64')
         return request.authorization.credentials == auth
     }, function (success) {
         if (success) {
-            step(function () {
-                crypto.randomBytes(16, step())
+            async(function () {
+                crypto.randomBytes(16, async())
             }, function (bytes) {
     // FIXME: Put an error here and t/agent/publisher test will swallow it.
                 var accessToken = uuid.v4(bytes)
@@ -82,11 +82,11 @@ Authenticator.prototype.token = cadence(function (step, body, request) {
     })
 })
 
-Authenticator.prototype.authenticate = cadence(function (step, token) {
+Authenticator.prototype.authenticate = cadence(function (async, token) {
     return this._tokens[token]
 })
 
-exports.createOAuth2Server = cadence(function (step, options) {
+exports.createOAuth2Server = cadence(function (async, options) {
     'use strict'
 
     // NB: we're using [HAL](http://stateless.co/hal_specification.html) here to
@@ -137,7 +137,7 @@ exports.createOAuth2Server = cadence(function (step, options) {
     }
 
     server.get('/', handle({
-        index: cadence(function (step, body, id) { return {} })
+        index: cadence(function (async, body, id) { return {} })
     }, hooks, { method: 'index', unauthorized: true }))
 
     server.on('connection', function (socket) {
@@ -146,5 +146,5 @@ exports.createOAuth2Server = cadence(function (step, options) {
         } })
     })
 
-    options.bouquet.start(server, options.binder, step())
+    options.bouquet.start(server, options.binder, async())
 })

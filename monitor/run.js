@@ -5,7 +5,7 @@ var logger = require('../monitor/logger')('monitor.run')
 var Sender = require('./ship')
 var tee = require('./tee')
 
-module.exports = cadence(function (step, io, file, loggly, tags, config) {
+module.exports = cadence(function (async, io, file, loggly, tags, config) {
     var child, killed, terminal = null
     var sender = new Sender(loggly)
     var stdout = []
@@ -28,9 +28,9 @@ module.exports = cadence(function (step, io, file, loggly, tags, config) {
 
     send = turnstile(function () {
         return stdout.splice(0, stdout.length)
-    }, cadence(function (step, lines) {
-        step([function () {
-            sender.send(true, tags, lines.join('\n') + '\n', step())
+    }, cadence(function (async, lines) {
+        async([function () {
+            sender.send(true, tags, lines.join('\n') + '\n', async())
         }, /^ECONNREFUSED$/, function () {
             return [ null, { statusCode: 500 } ]
         }], function (body, response) {
@@ -46,7 +46,7 @@ module.exports = cadence(function (step, io, file, loggly, tags, config) {
         if (error) terminated(error)
     })
 
-    step(function () {
+    async(function () {
         var stderr = []
         var context = {
             file: file,
@@ -55,7 +55,7 @@ module.exports = cadence(function (step, io, file, loggly, tags, config) {
                 tags: tags
             }
         }
-        step(function () {
+        async(function () {
             logger.info('start', context)
             child = processes.spawn('node', [ '--max_old_space_size=8912', '--nouse_idle_notification', file ])
             child.stdout.pipe(tee(io.stdout, function (lines) {
@@ -67,20 +67,20 @@ module.exports = cadence(function (step, io, file, loggly, tags, config) {
             }))
             child.stdin.write(JSON.stringify(config))
             child.stdin.end()
-            child.on('close', step(-1))
+            child.on('close', async(-1))
         }, function (code, signal) {
             child = null
             logger.info('shutdown', context, {
                 code: code, signal: signal
             })
         }, function () {
-            send(step())
+            send(async())
             if (stderr.length) {
-                sender.send(false, tags, stderr.join('\n') + '\n', step())
+                sender.send(false, tags, stderr.join('\n') + '\n', async())
             }
         })
     }) /* , function () {
-        if (killed) step(terminal)
-        else setTimeout(step(), 1000)
+        if (killed) async(terminal)
+        else setTimeout(async(), 1000)
     })() */
 })

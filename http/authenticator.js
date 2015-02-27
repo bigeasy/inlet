@@ -11,7 +11,7 @@ function Authenticator (binder) {
     this.tokenize = this.token.bind(this)
 }
 
-Authenticator.prototype.token = cadence(function (step, request) {
+Authenticator.prototype.token = cadence(function (async, request) {
     var authorized =
         request.authorization &&
         request.authorization.scheme == 'Basic' &&
@@ -19,8 +19,8 @@ Authenticator.prototype.token = cadence(function (step, request) {
     if (!authorized) {
         request.raise(401, 'Forbidden')
     }
-    step(function () {
-        crypto.randomBytes(16, step())
+    async(function () {
+        crypto.randomBytes(16, async())
     }, function (bytes) {
         var accessToken = uuid.v4(bytes)
         this._magazine.hold(accessToken, true).release()
@@ -28,7 +28,7 @@ Authenticator.prototype.token = cadence(function (step, request) {
     })
 })
 
-Authenticator.prototype.authenticate = cadence(function (step, request) {
+Authenticator.prototype.authenticate = cadence(function (async, request) {
     if (!middleware.isBearer(request)) return false
     var expired = Date.now() - 1000 * 60 * 60 * 24 // yesterday
     this._magazine.purge(function (cartridge) {

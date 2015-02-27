@@ -16,7 +16,7 @@ Authenticator.prototype.allow = function (accessToken) {
     this._magazine.hold(accessToken, true).release()
 }
 
-Authenticator.prototype.token = cadence(function (step, request) {
+Authenticator.prototype.token = cadence(function (async, request) {
     var authorized =
         request.authorization &&
         request.authorization.scheme == 'Basic' &&
@@ -24,8 +24,8 @@ Authenticator.prototype.token = cadence(function (step, request) {
     if (!authorized) {
         request.raise(401, 'Forbidden')
     }
-    step(function () {
-        crypto.randomBytes(16, step())
+    async(function () {
+        crypto.randomBytes(16, async())
     }, function (bytes) {
         var accessToken = uuid.v4(bytes)
         this.allow(accessToken)

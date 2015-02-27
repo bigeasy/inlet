@@ -1,4 +1,6 @@
-require('proof')(5, require('cadence')(function (step, assert) {
+require('proof')(5, prove)
+
+function prove (assert) {
     var middleware = require('../../http/middleware'), request
     request = { headers: { authorization: 'Other x y' } }
     middleware.authorizationParser(request, {}, function () {})
@@ -23,4 +25,4 @@ require('proof')(5, require('cadence')(function (step, assert) {
             assert(1, 'proxied')
         })
     })({}, {}, function () {})
-}))
+}

@@ -11,8 +11,8 @@ function Sender (url, pems) {
     this._ua = new UserAgent(false)
 }
 
-Sender.prototype.send = cadence(function (step, bulk, tags, messages) {
-    step(function () {
+Sender.prototype.send = cadence(function (async, bulk, tags, messages) {
+    async(function () {
         var message = Array.isArray(messages) ? messages.join('\n') : messages
         this._ua.fetch(this._binder, {
             url: (bulk ? '/bulk/' : '/inputs/') + this._token,
@@ -21,7 +21,7 @@ Sender.prototype.send = cadence(function (step, bulk, tags, messages) {
                 'X-LOGGLY-TAG': tags.join(',')
             },
             payload: new Buffer(message)
-        }, step())
+        }, async())
     })
 })
 

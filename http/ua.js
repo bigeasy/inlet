@@ -26,7 +26,7 @@ function collectAverages (time) {
     }
 }
 
-UserAgent.prototype.fetch = cadence(function (step) {
+UserAgent.prototype.fetch = cadence(function (async) {
     var request = {
         options: { headers: {} }
     }
@@ -89,10 +89,10 @@ UserAgent.prototype.fetch = cadence(function (step) {
         request.token = this._tokens[request.key]
     }
 
-    step(function () {
+    async(function () {
         if (request.grant == 'cc' && !request.token) {
             assert.ok(request.baseUrl.auth)
-            step(function () {
+            async(function () {
                 this.fetch({
                     url: url.format(request.url),
                     ca: request.options.ca
@@ -104,7 +104,7 @@ UserAgent.prototype.fetch = cadence(function (step) {
                     payload: {
                         grant_type: 'client_credentials'
                     }
-                }, step())
+                }, async())
             }, function (body, response) {
                 if (body.token_type == 'Bearer' && body.access_token) {
                     request.token = this._tokens[request.key] = body.access_token
@@ -146,9 +146,9 @@ UserAgent.prototype.fetch = cadence(function (step) {
         }
 
         var stopwatch = Date.now()
-        var fetch = step([function () {
-            var client = http.request(request.options, step(null))
-                             .on('error', step(Error))
+        var fetch = async([function () {
+            var client = http.request(request.options, async(null))
+                             .on('error', async(Error))
             if (payload) {
                 client.write(payload)
             }
@@ -180,8 +180,8 @@ UserAgent.prototype.fetch = cadence(function (step) {
             })
             return [ fetch, JSON.parse(body.toString()), response, body ]
         }], function (response) {
-            step(function () {
-                response.pipe(accum(step(null)))
+            async(function () {
+                response.pipe(accum(async(null)))
             }, function (body) {
                 collectAverages(Date.now() - stopwatch)
                 var parsed = body

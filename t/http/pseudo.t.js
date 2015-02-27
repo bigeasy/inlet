@@ -1,4 +1,6 @@
-require('../proof')(1, require('cadence')(function (step, assert) {
+require('../proof')(1, require('cadence')(prove))
+
+function prove (async, assert) {
     var stream = require('stream')
     var Pseudo = require('../../http/pseudo'),
         UserAgent = require('../../http/ua'),
@@ -8,8 +10,8 @@ require('../proof')(1, require('cadence')(function (step, assert) {
     var pseudo = new Pseudo(new Binder('https://127.0.0.1:8080', pems)),
         bouquet = new Bouquet,
         ua = new UserAgent
-    step(function () {
-        bouquet.start(pseudo, step())
+    async(function () {
+        bouquet.start(pseudo, async())
     }, function () {
         ua.fetch(pseudo.binder, {
             url: '/test',
@@ -17,10 +19,10 @@ require('../proof')(1, require('cadence')(function (step, assert) {
                 'content-type': 'text/plain'
             },
             payload: new Buffer(1024 * 1024 * 4)
-        }, step())
+        }, async())
     }, function (body, response) {
         assert(response.statusCode, 413, 'errored')
     }, function () {
-        bouquet.stop(step())
+        bouquet.stop(async())
     })
-}))
+}

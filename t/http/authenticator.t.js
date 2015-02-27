@@ -1,4 +1,6 @@
-require('../proof')(10, require('cadence')(function (step, assert) {
+require('../proof')(10, require('cadence')(prove))
+
+function prove (async, assert) {
     var middleware = require('../../http/middleware')
     var Authenticator = require('../../http/authenticator'),
         Bouquet = require('../../net/bouquet'),
@@ -33,19 +35,19 @@ require('../proof')(10, require('cadence')(function (step, assert) {
     var service = new Service
     var binder = service.binder = new Binder('https://a:z@127.0.0.1:7779', pems)
 
-    step(function () {
-        bouquet.start(service, step())
+    async(function () {
+        bouquet.start(service, async())
     }, function () {
         ua.fetch(binder, {
             url: '/guarded'
-        }, step())
+        }, async())
     }, function (body, response) {
         assert(response.statusCode, 401, 'no token status')
         assert(body, { message: 'Forbidden' }, 'no token body')
         ua.fetch(binder, {
             url: '/guarded',
             token: 'x'
-        }, step())
+        }, async())
     }, function (body, response) {
         assert(response.statusCode, 401, 'bad token status')
         assert(body, { message: 'Forbidden' }, 'bad token body')
@@ -53,7 +55,7 @@ require('../proof')(10, require('cadence')(function (step, assert) {
             url: 'https://z:a@127.0.0.1:7779/token',
             ca: pems.ca,
             payload: {}
-        }, step())
+        }, async())
     }, function (body, response) {
         assert(response.statusCode, 401, 'bad token status')
         assert(body, { message: 'Forbidden' }, 'bad token body')
@@ -61,17 +63,17 @@ require('../proof')(10, require('cadence')(function (step, assert) {
             url: 'https://z:a@127.0.0.1:7779/guarded',
             ca: pems.ca,
             grant: 'cc'
-        }, step())
+        }, async())
     }, function (body, response) {
         assert(response.statusCode, 401, 'bad token status')
         assert(body, { message: 'Forbidden' }, 'bad token body')
         ua.fetch(binder, {
             url: '/guarded',
             grant: 'cc'
-        }, step())
+        }, async())
     }, function (body, response) {
         assert(response.statusCode, 200, 'allowed status')
         assert(body, { a: 1 }, 'allowed body')
-        bouquet.stop(step())
+        bouquet.stop(async())
     })
-}))
+}
