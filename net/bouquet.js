@@ -1,6 +1,8 @@
-var cadence = require('cadence')
+var cadence = require('cadence/redux')
 var http = require('http'), https = require('https')
 var logger = require('../monitor/logger')('net.bouquet')
+
+require('cadence/loops')
 
 function Bouquet () {
     this._servers = []
@@ -28,7 +30,7 @@ Bouquet.prototype.merge = function (bouquet) {
 }
 
 Bouquet.prototype.stop = cadence(function (async) {
-    async(function (server) {
+    async.forEach(function (server) {
         server.close(async())
     })(this._servers)
 })

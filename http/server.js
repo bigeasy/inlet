@@ -1,6 +1,6 @@
 var url = require('url')
 var restify = require('restify')
-var cadence = require('cadence')
+var cadence = require('cadence/redux')
 var crypto = require('crypto')
 var uuid = require('node-uuid')
 var fs = require('fs')

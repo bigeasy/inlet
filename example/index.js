@@ -1,4 +1,4 @@
-var cadence = require('cadence'),
+var cadence = require('cadence/redux'),
     Binder = require('inlet/net/binder'),
     middleware = require('inlet/http/middleware'),
     binder = new Binder('127.0.0.1:3000')

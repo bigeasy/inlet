@@ -1,5 +1,5 @@
 var connect = require('connect'),
-    cadence = require('cadence'),
+    cadence = require('cadence/redux'),
     quip = require('quip'),
     dispatch = require('dispatch'),
     bodyParser = require('body-parser'),

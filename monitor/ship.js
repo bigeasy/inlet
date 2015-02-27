@@ -1,4 +1,4 @@
-var cadence = require('cadence')
+var cadence = require('cadence/redux')
 var UserAgent = require('../http/ua')
 var Binder = require('../net/binder')
 var url = require('url')

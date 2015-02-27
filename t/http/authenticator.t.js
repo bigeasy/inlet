@@ -1,4 +1,4 @@
-require('../proof')(10, require('cadence')(prove))
+require('../proof')(10, require('cadence/redux')(prove))
 
 function prove (async, assert) {
     var middleware = require('../../http/middleware')

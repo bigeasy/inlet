@@ -5,6 +5,8 @@ var logger = require('../monitor/logger')('monitor.run')
 var Sender = require('./ship')
 var tee = require('./tee')
 
+throw new Error
+
 module.exports = cadence(function (async, io, file, loggly, tags, config) {
     var child, killed, terminal = null
     var sender = new Sender(loggly)

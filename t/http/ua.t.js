@@ -1,4 +1,4 @@
-require('../proof')(32, require('cadence')(prove))
+require('../proof')(32, require('cadence/redux')(prove))
 
 function prove (async, assert) {
     var Pseudo = require('../../http/pseudo'),
@@ -223,6 +223,7 @@ function prove (async, assert) {
             body: {}
         }, 'request with token')
     }, function () {
+        console.log('here')
         bouquet.stop(async())
     }, function () {
 // SSL!

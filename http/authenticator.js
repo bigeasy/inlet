@@ -1,5 +1,5 @@
 var crypto = require('crypto'),
-    cadence = require('cadence'),
+    cadence = require('cadence/redux'),
     Cache = require('magazine'),
     uuid = require('node-uuid'),
     middleware = require('./middleware')

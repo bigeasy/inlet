@@ -1,4 +1,4 @@
-var crypto = require('crypto'),
+var crypto = require('crypto/redux'),
     cadence = require('cadence'),
     Cache = require('magazine'),
     uuid = require('node-uuid'),

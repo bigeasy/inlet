@@ -1,4 +1,4 @@
-var cadence = require('cadence')
+var cadence = require('cadence/redux')
 var url = require('url')
 var ok = require('assert').ok
 var assert = require('assert')
@@ -8,6 +8,8 @@ var typer = require('media-typer')
 var accum = require('accum')
 var Window = require('../monitor/window')
 var __slice = [].slice
+
+require('cadence/ee')
 
 function UserAgent (log) {
     this._log = arguments.length == 0 ? true : log
@@ -147,8 +149,8 @@ UserAgent.prototype.fetch = cadence(function (async) {
 
         var stopwatch = Date.now()
         var fetch = async([function () {
-            var client = http.request(request.options, async(null))
-                             .on('error', async(Error))
+            var client = http.request(request.options)
+            async.ee(client).end('response').error()
             if (payload) {
                 client.write(payload)
             }
@@ -158,7 +160,7 @@ UserAgent.prototype.fetch = cadence(function (async) {
                 })
             }
             client.end()
-        }, function (errors, error) {
+        }, function (error) {
             collectAverages(Date.now() - stopwatch)
             var body = new Buffer(JSON.stringify({ message: error.message, errno: error.code }))
             var response = {
@@ -180,16 +182,23 @@ UserAgent.prototype.fetch = cadence(function (async) {
             })
             return [ fetch, JSON.parse(body.toString()), response, body ]
         }], function (response) {
+            var chunks = []
             async(function () {
-                response.pipe(accum(async(null)))
-            }, function (body) {
+                async.ee(response)
+                     .on('data', function (chunk) {
+                        chunks.push(chunk)
+                      })
+                     .end('end')
+                     .error()
+            }, function () {
+                var body = Buffer.concat(chunks)
                 collectAverages(Date.now() - stopwatch)
                 var parsed = body
                 var display = null
                 var type = typer.parse(response.headers['content-type'] || 'application/octet-stream')
                 switch (type.type + '/' + type.subtype) {
                 case 'application/json':
-                    display = parsed = JSON.parse(body)
+                    display = parsed = JSON.parse(body.toString())
                     break
                 case 'text/html':
                 case 'text/plain':
@@ -208,9 +217,9 @@ UserAgent.prototype.fetch = cadence(function (async) {
                 if (request.grant == 'cc' && response.statusCode == 401) {
                     delete this._tokens[request.key]
                 }
-                return [ parsed, response, body ]
+                return [ fetch, parsed, response, body ]
             })
-        })(1)
+        })()
     })
 })
 

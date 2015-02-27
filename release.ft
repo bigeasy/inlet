@@ -1,5 +1,6 @@
 ### Issue by Issue
 
+ * Upgrade to Cadence Redux. #46.
  * Rename `step` to `async`. #45.
  * Upgrade Cadence to 0.0.52. #44.
  * Specify `Agent` in override object. #34.

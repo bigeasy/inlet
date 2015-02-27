@@ -3,7 +3,7 @@ var number = 0
 var base = 0
 var filters = {}
 
-var cadence = require('cadence')
+var cadence = require('cadence/redux')
 var Staccato = require('staccato')
 
 function Queue () {
@@ -22,9 +22,9 @@ Queue.prototype.pump = cadence(function (async) {
     var previous = Math.floor(Date.now() / 1000) * 1000
 
     var message
-    async(function () {
+    var loop = async(function () {
 
-        if (this._shutdown) return [ async ]
+        if (this._shutdown) return [ loop ]
                                   // ^^^^^ break forever loop.
 
     }, function () {

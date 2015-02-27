@@ -1,4 +1,4 @@
-require('../proof')(1, require('cadence')(prove))
+require('../proof')(1, require('cadence/redux')(prove))
 
 function prove (async, assert) {
     var stream = require('stream')
