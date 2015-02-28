@@ -198,7 +198,12 @@ UserAgent.prototype.fetch = cadence(function (async) {
                 var type = typer.parse(response.headers['content-type'] || 'application/octet-stream')
                 switch (type.type + '/' + type.subtype) {
                 case 'application/json':
-                    display = parsed = JSON.parse(body.toString())
+                    try {
+                        display = parsed = JSON.parse(body.toString())
+                    } catch (e) {
+                        log.call(this, 'parse', { toString: body.toString() })
+                        throw e
+                    }
                     break
                 case 'text/html':
                 case 'text/plain':
