@@ -201,8 +201,8 @@ UserAgent.prototype.fetch = cadence(function (async) {
                     try {
                         display = parsed = JSON.parse(body.toString())
                     } catch (e) {
-                        log.call(this, 'parse', { toString: body.toString() })
-                        throw e
+                        display = parsed = body.toString()
+                        log.call(this, 'unparsable', { toString: display })
                     }
                     break
                 case 'text/html':
