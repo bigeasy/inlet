@@ -12,6 +12,10 @@ function Queue () {
     this.interval = 5
 }
 
+var LEVELS = [
+    'fatal', 'error', 'warn', 'info', 'debug', 'trace'
+]
+
 Queue.prototype.setOutput = function (out) {
     this.out = new Staccato(out, false)
 }
@@ -96,7 +100,12 @@ if (process.env.WINK_NO_LOGGING == 'YES') {
 }
 
 function log (context, level, vargs) {
-    if (module.exports.hush) return
+    if (LEVELS.indexOf(level) > LEVELS.indexOf(module.exports.level)) {
+        return
+    }
+    if (module.exports.hush) {
+        return
+    }
     if (number === 0) {
         base = Date.now()
     }
@@ -191,3 +200,4 @@ module.exports.filter = function(contexts, name, filter) {
 
 module.exports.context = {}
 module.exports.tags = []
+module.exports.level = 'trace'

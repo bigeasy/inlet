@@ -1,5 +1,6 @@
 ### Issue by Issue
 
+ * Filter messages by level. #51.
  * Upgrade to Cadence Redux. #46.
  * Rename `step` to `async`. #45.
  * Upgrade Cadence to 0.0.52. #44.
