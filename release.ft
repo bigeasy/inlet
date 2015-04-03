@@ -1,5 +1,6 @@
 ### Issue by Issue
 
+ * Implement TLS client authentication. #55.
  * Filter messages by level. #51.
  * Upgrade to Cadence Redux. #46.
  * Rename `step` to `async`. #45.

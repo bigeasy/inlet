@@ -38,7 +38,13 @@ UserAgent.prototype.fetch = cadence(function (async) {
             object.forEach(override)
         } else {
             if (object instanceof Binder) {
-                object = { url: object.location, ca: (object.tls || {}).ca }
+                var tls = object.tls || {}
+                object = {
+                    url: object.location,
+                    ca: tls.ca,
+                    cert: tls.cert,
+                    key: tls.key
+                }
             }
             for (var key in object) {
                 if (key == 'url') {

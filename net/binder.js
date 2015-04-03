@@ -7,6 +7,7 @@ function Binder (location, tls) {
         this[key] = parsed[key]
     }
     this.port = +(this.port)
+    // todo: rename
     this.tls = /^(tls|https):$/.test(parsed.protocol) && tls
 }
 

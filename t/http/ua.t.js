@@ -1,4 +1,4 @@
-require('../proof')(32, require('cadence/redux')(prove))
+require('../proof')(34, require('cadence/redux')(prove))
 
 function prove (async, assert) {
     var Pseudo = require('../../http/pseudo'),
@@ -223,7 +223,6 @@ function prove (async, assert) {
             body: {}
         }, 'request with token')
     }, function () {
-        console.log('here')
         bouquet.stop(async())
     }, function () {
 // SSL!
@@ -242,6 +241,29 @@ function prove (async, assert) {
         ua.fetch(pseudo.binder, { agent: false }, async())
     }, function () {
         assert(pseudo.shift().headers.connection, 'close', 'connection close')
+    }, function () {
+        bouquet.stop(async())
+    }, function () {
+        bouquet = new Bouquet
+        pseudo = new Pseudo(new Binder('https://127.0.0.1:7779', {
+            ca:                 pems.ca,
+            key:                pems.key,
+            cert:               pems.cert,
+            requestCert:        true,
+            rejectUnauthorized: true
+        }))
+        bouquet.start(pseudo, async())
+    }, function () {
+        pseudo.binder.tls._clientTLS = true
+        var binder = new Binder('https://127.0.0.1:7779', {
+            ca:                 pems.ca
+        })
+        ua.fetch(binder, { agent: false }, async())
+    }, function (body, response) {
+        assert(response.statusCode, 599, 'TLS client authentication failed')
+        ua.fetch(pseudo.binder, { agent: false }, async())
+    }, function (body, response) {
+        assert(response.statusCode, 200, 'TLS client authentication succeeded')
         bouquet.stop(async())
     })
 }
