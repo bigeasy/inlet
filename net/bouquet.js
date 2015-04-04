@@ -10,8 +10,8 @@ function Bouquet () {
 
 Bouquet.prototype.start = cadence(function (async, object) {
     var protocol = require(object.binder.protocol.replace(/:$/, ''))
-    var vargs = [ object.binder.tls, object.dispatch(object.binder) ]
-    if (!vargs[0]) vargs.shift()
+    var vargs = [ object.binder.options, object.dispatch(object.binder) ]
+    if (Object.keys(vargs[0]).length === 0) vargs.shift()
     var server = protocol.createServer.apply(protocol, vargs)
     logger.info('connection', { event: 'listen', binder: object.binder })
     server.listen(object.binder.port, async())

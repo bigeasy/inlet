@@ -254,7 +254,6 @@ function prove (async, assert) {
         }))
         bouquet.start(pseudo, async())
     }, function () {
-        pseudo.binder.tls._clientTLS = true
         var binder = new Binder('https://127.0.0.1:7779', {
             ca:                 pems.ca
         })
