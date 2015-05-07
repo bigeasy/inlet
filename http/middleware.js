@@ -4,6 +4,7 @@ var connect = require('connect'),
     dispatch = require('dispatch'),
     bodyParser = require('body-parser'),
     errorHandler = require('errorhandler'),
+    slice = [].slice,
     logger = require('../monitor/logger')('http.middleware')
 
 function HTTPError (code, message, headers) {
@@ -101,8 +102,15 @@ var authorizationParser = exports.authorizationParser = function (request, respo
 }
 
 var handle = exports.handle = function (handler) {
-    return function (request, response, next) {
-        handler(request, function (error, result) {
+    return function () {
+        var vargs = slice.call(arguments)
+        var request = vargs.shift(),
+            response = vargs.shift(),
+            next = vargs.shift()
+
+        handler.apply(null, [ request ].concat(vargs, [ done ]))
+
+        function done (error, result) {
             if (error) {
                 if (!!newrelic) newrelic.noticeError(error, {})
 
@@ -148,7 +156,7 @@ var handle = exports.handle = function (handler) {
                     break
                 }
             }
-        })
+        }
     }
 }
 
