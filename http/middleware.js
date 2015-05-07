@@ -106,7 +106,7 @@ var handle = exports.handle = function (handler) {
         var vargs = slice.call(arguments)
         var request = vargs.shift(),
             response = vargs.shift(),
-            next = vargs.pop()
+            next = vargs.shift()
 
         handler.apply(null, [ request ].concat(vargs, [ done ]))
 
