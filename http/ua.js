@@ -127,7 +127,7 @@ UserAgent.prototype.fetch = cadence(function (async) {
             request.options.headers.authorization = 'Bearer ' + request.token
         }
         for (var key in request.options) {
-            if (key == 'ca') {
+            if (key == 'ca' || key == 'agent') {
                 options[key] = true
             } else {
                 options[key] = request.options[key]
