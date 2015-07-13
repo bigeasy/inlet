@@ -2,7 +2,6 @@ var cadence = require('cadence/redux')
 var url = require('url')
 var ok = require('assert').ok
 var assert = require('assert')
-var logger = require('../monitor/logger')('http.ua')
 var Binder = require('../net/binder')
 var typer = require('media-typer')
 var accum = require('accum')
@@ -55,7 +54,7 @@ UserAgent.prototype.fetch = cadence(function (async) {
 
     function log (name, object) {
         if (this._log) {
-            logger.debug(name, object, request.context || {})
+            console.log(name, object, request.context || {})
         }
     }
 

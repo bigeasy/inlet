@@ -1,6 +1,5 @@
 var cadence = require('cadence/redux')
 var http = require('http'), https = require('https')
-var logger = require('../monitor/logger')('net.bouquet')
 
 require('cadence/loops')
 
@@ -13,15 +12,8 @@ Bouquet.prototype.start = cadence(function (async, object) {
     var vargs = [ object.binder.options, object.dispatch(object.binder) ]
     if (Object.keys(vargs[0]).length === 0) vargs.shift()
     var server = protocol.createServer.apply(protocol, vargs)
-    logger.info('connection', { event: 'listen', binder: object.binder })
     server.listen(object.binder.port, async())
     this._servers.push(server)
-    server.on('connection', function (socket) {
-        logger.debug('connection', {
-            endpoint: object.binder.location,
-            socket: { address: socket.remoteAddress, port: socket.remotePort }
-        })
-    })
 })
 
 Bouquet.prototype.merge = function (bouquet) {

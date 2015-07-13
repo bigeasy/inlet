@@ -4,8 +4,7 @@ var connect = require('connect'),
     dispatch = require('dispatch'),
     bodyParser = require('body-parser'),
     errorHandler = require('errorhandler'),
-    slice = [].slice,
-    logger = require('../monitor/logger')('http.middleware')
+    slice = [].slice
 
 function HTTPError (code, message, headers) {
     this.code = code
@@ -35,7 +34,7 @@ exports.dispatch = function (binder, structure, remote, nr, prefix) {
                     port: request.headers['x-forwarded-port'] || request.socket.remotePort
                 }
             }
-            logger.debug('request', {
+            console.log('request', {
                 headers: request.headers
             }, request.context)
             next()
@@ -115,7 +114,7 @@ var handle = exports.handle = function (handler) {
                 if (!!newrelic) newrelic.noticeError(error, {})
 
                 if (error instanceof HTTPError) {
-                    logger.info('http', {
+                    console.log('http', {
                         statusCode: error.code,
                         request: {
                             headers: request.headers,
@@ -128,12 +127,12 @@ var handle = exports.handle = function (handler) {
                     })
                     response.status(error.code).headers(error.headers).json({ message: error.message })
                 } else if (!next) {
-                    logger.error('error', { message: error.message, stack: error.stack })
+                    console.log('error', { message: error.message, stack: error.stack })
                 } else {
                     next(error)
                 }
             } else {
-                logger.info('http', {
+                console.log('http', {
                     statusCode: 200,
                     request: {
                         headers: request.headers,
@@ -181,7 +180,7 @@ exports.send = function (statusCode, headers, body) {
             'content-type': headers['content-type'],
             'content-length': body.length
         }
-        logger.info('send', {
+        console.log('send', {
             statusCode: statusCode,
             headers: h,
             body: JSON.parse(body.toString())
