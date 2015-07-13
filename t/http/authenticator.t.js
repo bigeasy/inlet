@@ -5,7 +5,7 @@ function prove (async, assert) {
     var Authenticator = require('../../http/authenticator'),
         Bouquet = require('../../net/bouquet'),
         Binder = require('../../net/binder'),
-        UserAgent = require('../../http/ua'),
+        UserAgent = require('vizsla'),
         pems = require('../../http/pems')
 
     var bouquet = new Bouquet,
@@ -34,17 +34,21 @@ function prove (async, assert) {
 
     var service = new Service
     var binder = service.binder = new Binder('https://a:z@127.0.0.1:7779', pems)
+    var session = {
+        url: 'https://a:z@127.0.0.1:7779',
+        ca: pems.ca
+    }
 
     async(function () {
         bouquet.start(service, async())
     }, function () {
-        ua.fetch(binder, {
+        ua.fetch(session, {
             url: '/guarded'
         }, async())
     }, function (body, response) {
         assert(response.statusCode, 401, 'no token status')
         assert(body, { message: 'Forbidden' }, 'no token body')
-        ua.fetch(binder, {
+        ua.fetch(session, {
             url: '/guarded',
             token: 'x'
         }, async())
@@ -67,7 +71,7 @@ function prove (async, assert) {
     }, function (body, response) {
         assert(response.statusCode, 401, 'bad token status')
         assert(body, { message: 'Forbidden' }, 'bad token body')
-        ua.fetch(binder, {
+        ua.fetch(session, {
             url: '/guarded',
             grant: 'cc'
         }, async())
