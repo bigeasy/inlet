@@ -4,9 +4,9 @@ var crypto = require('crypto'),
     uuid = require('node-uuid'),
     middleware = require('./middleware')
 
-function Authenticator (binder) {
-    this._auth = new Buffer(binder.auth).toString('base64')
-    this._magazine = (new Cache).createMagazine()
+function Authenticator (auth) {
+    this._auth = new Buffer(auth).toString('base64')
+    this._magazine = new Cache().createMagazine()
     this.authorize = this.authenticate.bind(this)
     this.tokenize = this.token.bind(this)
 }
@@ -28,17 +28,23 @@ Authenticator.prototype.token = cadence(function (async, request) {
     })
 })
 
-Authenticator.prototype.authenticate = cadence(function (async, request) {
-    if (!middleware.isBearer(request)) return false
-    var expired = Date.now() - 1000 * 60 * 60 * 24 // yesterday
-    this._magazine.purge(function (cartridge) {
-        return cartridge.when >= expired
-    })
+Authenticator.prototype.authenticate = function (request) {
+    if (!Authenticator.isBearer(request)) {
+        request.raise(401, 'Forbidden')
+    }
+    this._magazine.expire(1000 * 60 * 60 * 24) // yesterday
     var token = request.authorization.credentials
     var cartridge = this._magazine.hold(token, false), authorized
-    if (authorized = cartridge.value) cartridge.release()
-    else cartridge.remove()
-    return authorized
-})
+    if (cartridge.value) {
+        cartridge.release()
+    } else {
+        cartridge.remove()
+        request.raise(401, 'Forbidden')
+    }
+}
+
+Authenticator.isBearer = function (request) {
+    return request.authorization && request.authorization.scheme == 'Bearer'
+}
 
 module.exports = Authenticator

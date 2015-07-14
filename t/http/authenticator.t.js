@@ -3,81 +3,70 @@ require('../proof')(10, require('cadence/redux')(prove))
 function prove (async, assert) {
     var middleware = require('../../http/middleware')
     var Authenticator = require('../../http/authenticator'),
-        Bouquet = require('../../net/bouquet'),
-        Binder = require('../../net/binder'),
         UserAgent = require('vizsla'),
         pems = require('../../http/pems')
 
-    var bouquet = new Bouquet,
-        ua = new UserAgent
+    assert(!Authenticator.isBearer({}), 'no authentication')
+    assert(!Authenticator.isBearer({ authorization: { scheme: 'Basic' } }), 'not bearer')
 
-    function Service () {
-    }
+    var authenticator = new Authenticator('a:z')
 
-    Service.prototype.dispatch = function () {
-        var authenticator = new Authenticator(this.binder)
-        var authorize = authenticator.authorize
-        return middleware.dispatch(this.binder, {
-            'GET /guarded': middleware.authorize(authorize, this.guarded.bind(this)),
-            'POST /token': middleware.handle(authenticator.tokenize)
-        }, null, {
-            addCustomParameter:   function (name, value) {},
-            noticeError:          function (err)         {},
-            createWebTransaction: function (url, handle) { return handle },
-            endTransaction:       function ()            {}
-        }, 'testing')
-    }
-
-    Service.prototype.guarded = function (request, callback) {
-        callback(null, { a: 1 })
-    }
-
-    var service = new Service
-    var binder = service.binder = new Binder('https://a:z@127.0.0.1:7779', pems)
-    var session = {
-        url: 'https://a:z@127.0.0.1:7779',
-        ca: pems.ca
-    }
-
-    async(function () {
-        bouquet.start(service, async())
-    }, function () {
-        ua.fetch(session, {
-            url: '/guarded'
+    async([function () {
+        authenticator.token({
+            authorization: {
+                scheme: 'Basic',
+                credentials: 'x'
+            },
+            raise: function (code, message) {
+                var error = new Error(message)
+                error.code = code
+                throw error
+            }
         }, async())
-    }, function (body, response) {
-        assert(response.statusCode, 401, 'no token status')
-        assert(body, { message: 'Forbidden' }, 'no token body')
-        ua.fetch(session, {
-            url: '/guarded',
-            token: 'x'
+    }, function (error) {
+        assert(error.message, 'Forbidden', 'basic auth forbidden message')
+        assert(error.code, 401, 'basic auth forbidden code')
+    }], function () {
+        authenticator.token({
+            authorization: {
+                scheme: 'Basic',
+                credentials: authenticator._auth
+            },
+            raise: raise
         }, async())
-    }, function (body, response) {
-        assert(response.statusCode, 401, 'bad token status')
-        assert(body, { message: 'Forbidden' }, 'bad token body')
-        ua.fetch({
-            url: 'https://z:a@127.0.0.1:7779/token',
-            ca: pems.ca,
-            payload: {}
-        }, async())
-    }, function (body, response) {
-        assert(response.statusCode, 401, 'bad token status')
-        assert(body, { message: 'Forbidden' }, 'bad token body')
-        ua.fetch({
-            url: 'https://z:a@127.0.0.1:7779/guarded',
-            ca: pems.ca,
-            grant: 'cc'
-        }, async())
-    }, function (body, response) {
-        assert(response.statusCode, 401, 'bad token status')
-        assert(body, { message: 'Forbidden' }, 'bad token body')
-        ua.fetch(session, {
-            url: '/guarded',
-            grant: 'cc'
-        }, async())
-    }, function (body, response) {
-        assert(response.statusCode, 200, 'allowed status')
-        assert(body, { a: 1 }, 'allowed body')
-        bouquet.stop(async())
+    }, function (response) {
+        assert(response.token_type, 'Bearer', 'basic auth token type')
+        assert(response.access_token, 'basic auth access token')
+        try {
+            authenticator.authenticate({ raise: raise })
+        } catch (error) {
+            assert(error.message, 'Forbidden', 'no authorization forbidden message')
+            assert(error.code, 401, 'no authorization forbidden code')
+        }
+        try {
+            authenticator.authenticate({
+                authorization: {
+                    scheme: 'Bearer',
+                    credentials: 'x'
+                },
+                raise: raise
+            })
+        } catch (error) {
+            assert(error.message, 'Forbidden', 'bearer forbidden message')
+            assert(error.code, 401, 'bearer forbidden code')
+        }
+        authenticator.authenticate({
+            authorization: {
+                scheme: 'Bearer',
+                credentials: response.access_token
+            },
+            raise: raise
+        })
     })
+
+    function raise (code, message) {
+        var error = new Error(message)
+        error.code = code
+        throw error
+    }
 }

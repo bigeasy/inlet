@@ -28,7 +28,7 @@
                         "errorhandler":         "1.1.1",
                         "body-parser":          "1.4.3",
                         "turnstile":            "0.0.5",
-                        "magazine":             "0.0.12",
+                        "magazine":             "0.0.14",
                         "node-uuid":            "1.4.1",
                         "accum":                "0.3.6",
                         "utf8-stream":          "0.0.0",
