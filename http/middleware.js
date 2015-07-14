@@ -100,7 +100,7 @@ var authorizationParser = exports.authorizationParser = function (request, respo
     next()
 }
 
-var handle = exports.handle = function (handler) {
+var handle = exports.handle = function (handler, logger, levels) {
     return function () {
         var vargs = slice.call(arguments)
         var request = vargs.shift(),
@@ -114,7 +114,7 @@ var handle = exports.handle = function (handler) {
                 if (!!newrelic) newrelic.noticeError(error, {})
 
                 if (error instanceof HTTPError) {
-                    console.log('http', {
+                    logger.info('http', {
                         statusCode: error.code,
                         request: {
                             headers: request.headers,
@@ -127,12 +127,12 @@ var handle = exports.handle = function (handler) {
                     })
                     response.status(error.code).headers(error.headers).json({ message: error.message })
                 } else if (!next) {
-                    console.log('error', { message: error.message, stack: error.stack })
+                    logger.error('error', { message: error.message, stack: error.stack })
                 } else {
                     next(error)
                 }
             } else {
-                console.log('http', {
+                logger.info('http', {
                     statusCode: 200,
                     request: {
                         headers: request.headers,
@@ -159,28 +159,13 @@ var handle = exports.handle = function (handler) {
     }
 }
 
-exports.authorize = function (authorizer, handler) {
-    return handle(cadence(function (async, request) {
-        async(function () {
-            authorizer(request, async())
-        }, function (identity) {
-            if (identity) {
-                request.authorization.identity = identity
-                handler(request, async())
-            } else {
-                request.raise(401, 'Forbidden')
-            }
-        })
-    }))
-}
-
-exports.send = function (statusCode, headers, body) {
+exports.send = function (statusCode, headers, body, logger, level) {
     return function (response) {
         var h = {
             'content-type': headers['content-type'],
             'content-length': body.length
         }
-        console.log('send', {
+        logger.log(level, 'send', {
             statusCode: statusCode,
             headers: h,
             body: JSON.parse(body.toString())

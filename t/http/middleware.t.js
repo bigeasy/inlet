@@ -2,6 +2,9 @@ require('proof')(5, prove)
 
 function prove (assert) {
     var middleware = require('../../http/middleware'), request
+    var logger = {
+        info: function () {}
+    }
     request = { headers: { authorization: 'Other x y' } }
     middleware.authorizationParser(request, {}, function () {})
     assert(!request.authorization, 'bad format')
@@ -16,7 +19,7 @@ function prove (assert) {
 
     middleware.handle(function (request, callback) {
         callback(new Error('error'))
-    })({}, {}, function (error) {
+    }, logger)({}, {}, function (error) {
         assert(error.message, 'error', 'unexpected error')
     })
 
@@ -24,5 +27,5 @@ function prove (assert) {
         callback(null, function () {
             assert(1, 'proxied')
         })
-    })({}, {}, function () {})
+    }, logger)({}, {}, function () {})
 }
