@@ -1,8 +1,7 @@
 var crypto = require('crypto'),
     cadence = require('cadence/redux'),
     Cache = require('magazine'),
-    uuid = require('node-uuid'),
-    middleware = require('./middleware')
+    uuid = require('node-uuid')
 
 function Authenticator (auth) {
     this._auth = new Buffer(auth).toString('base64')

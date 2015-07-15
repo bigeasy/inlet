@@ -1,7 +1,6 @@
 require('proof')(10, require('cadence/redux')(prove))
 
 function prove (async, assert) {
-    var middleware = require('../../http/middleware')
     var Authenticator = require('../../http/authenticator'),
         UserAgent = require('vizsla')
 

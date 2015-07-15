@@ -1,13 +1,7 @@
+var cadence = require('cadence/redux')
 var dispatch = require('dispatch')
 var Interrupt = require('interrupt'),
     interrupt = new Interrupt
-var slice = [].slice
-
-function HTTPError (code, message, headers) {
-    this.code = code
-    this.message = message
-    this.headers = headers || {}
-}
 
 function Dispatcher (service, logger) {
     this._dispatch = {}
@@ -25,19 +19,17 @@ Dispatcher.prototype.createDispatcher = function () {
 
 module.exports = Dispatcher
 
+var catcher = cadence(function (async, object, method, request) {
+    object[method](request, async())
+})
+
 function handle (object, method) {
-    return function () {
-        var vargs = slice.call(arguments)
-        var request = vargs.shift(),
-            response = vargs.shift(),
-            next = vargs.shift(),
-            logger = this._logger
+    return function (request, response, next) {
+        var logger = this._logger
 
-        request.raise = function (code, message, headers) {
-            interrupt.panic(new Error, message, { code: code, headers: headers })
-        }
-
-        object[method](request, function (error, result) {
+        request.raise = raise
+        catcher(object, method, request, function (error, result) {
+            delete request.raise
             var body
             if (error) {
                 // if (!!newrelic) newrelic.noticeError(error, {})
@@ -55,8 +47,11 @@ function handle (object, method) {
                             }
                         })
                         body = new Buffer(JSON.stringify({ message: error.message }))
-                        error.headers['content-length'] = body.length
-                        response.writeHead(error.code, error.message, error.headers)
+                        error.context.headers['content-length'] = body.length
+                        error.context.headers['content-type'] = 'application/json'
+                        response.writeHead(error.context.code,
+                                           error.message,
+                                           error.context.headers)
                         response.end(body)
                     })(error)
                 } catch (error) {
@@ -74,6 +69,7 @@ function handle (object, method) {
                         payload: result
                     }
                 })
+                var headers = {}
                 switch (typeof result) {
                 case 'function':
                     result(response)
@@ -82,12 +78,29 @@ function handle (object, method) {
                     body = new Buffer(result)
                     break
                 default:
+                    headers['content-type'] = 'application/json'
                     body = new Buffer(JSON.stringify(result))
                     break
                 }
-                response.writeHead(200, 'OK', { 'content-length': body.length })
+                headers['content-length'] = body.length
+                response.writeHead(200, 'OK', headers)
                 response.end(body)
             }
         })
+    }
+}
+
+function raise (code, message, headers) {
+    interrupt.panic(new Error, message, { code: code, headers: headers || {} })
+}
+
+Dispatcher.resend = function (statusCode, headers, body) {
+    return function (response) {
+        var h = {
+            'content-type': headers['content-type'],
+            'content-length': body.length
+        }
+        response.writeHeader(statusCode, h)
+        response.end(body)
     }
 }
