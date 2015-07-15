@@ -1,10 +1,9 @@
-require('../proof')(10, require('cadence/redux')(prove))
+require('proof')(10, require('cadence/redux')(prove))
 
 function prove (async, assert) {
     var middleware = require('../../http/middleware')
     var Authenticator = require('../../http/authenticator'),
-        UserAgent = require('vizsla'),
-        pems = require('../../http/pems')
+        UserAgent = require('vizsla')
 
     assert(!Authenticator.isBearer({}), 'no authentication')
     assert(!Authenticator.isBearer({ authorization: { scheme: 'Basic' } }), 'not bearer')

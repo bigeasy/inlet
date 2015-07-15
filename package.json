@@ -35,7 +35,8 @@
                         "through":              "2.3.6",
                         "staccato":             "0.0.5",
                         "newrelic":             ">= 1.11.3",
-                        "vizsla":               "0.0.2"
+                        "vizsla":               "0.0.2",
+                        "interrupt":            "0.0.6"
     },
     "devDependencies":
     {

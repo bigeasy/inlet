@@ -6,12 +6,6 @@ var connect = require('connect'),
     errorHandler = require('errorhandler'),
     slice = [].slice
 
-function HTTPError (code, message, headers) {
-    this.code = code
-    this.message = message
-    this.headers = headers || {}
-}
-
 var newrelic
 
 exports.dispatch = function (binder, structure, remote, nr, prefix) {
@@ -40,8 +34,6 @@ exports.dispatch = function (binder, structure, remote, nr, prefix) {
             next()
         })
         .use(authorizationParser)
-        .use(quip)
-        .use(jump)
         .use(bodyParser.json())
         .use(dispatch(structure))
         .use(function (request, response, next) {
@@ -81,13 +73,6 @@ function reliquary(prefix, structure) {
     }
 
     return result
-}
-
-var jump = exports.jump = function (request, response, next) {
-    request.raise = function (code, message, headers) {
-        throw new HTTPError(code, message, headers)
-    }
-    next()
 }
 
 var authorizationParser = exports.authorizationParser = function (request, response, next) {
@@ -159,23 +144,19 @@ var handle = exports.handle = function (handler, logger, levels) {
     }
 }
 
-exports.send = function (statusCode, headers, body, logger, level) {
+exports.send = function (statusCode, headers, body, logger) {
     return function (response) {
         var h = {
             'content-type': headers['content-type'],
             'content-length': body.length
         }
-        logger.log(level, 'send', {
+        if (false)
+        logger.info('send', {
             statusCode: statusCode,
             headers: h,
             body: JSON.parse(body.toString())
         })
-        response.status(statusCode).headers(h)
-        response.write(body)
-        response.end()
+        response.writeHeader(statusCode, h)
+        response.end(body)
     }
-}
-
-exports.isBearer = function (request) {
-    return request.authorization && request.authorization.scheme == 'Bearer'
 }
