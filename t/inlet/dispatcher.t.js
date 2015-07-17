@@ -43,7 +43,7 @@ function prove (async, assert) {
     var service = new Service
     var dispatcher = service.dispatcher()
 
-    var server = http.createServer(connect().use(service.dispatcher()))
+    var server = http.createServer(service.dispatcher().server())
     var ua = new UserAgent, session = { url: 'http://127.0.0.1:8077' }
 
     async(function () {

@@ -14,7 +14,14 @@ Dispatcher.prototype.dispatch = function (pattern, method) {
 }
 
 Dispatcher.prototype.createDispatcher = function () {
-    return dispatch(this._dispatch)
+    var dispatcher = dispatch(this._dispatch)
+    dispatcher.server = function () {
+        return require('connect')()
+            .use(require('express-auth-parser'))
+            .use(require('body-parser').json())
+            .use(dispatcher)
+    }
+    return dispatcher
 }
 
 module.exports = Dispatcher
