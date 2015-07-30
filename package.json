@@ -25,7 +25,7 @@
                         "express-auth-parser":  "0.1.2",
                         "magazine":             "0.0.14",
                         "vizsla":               "0.0.2",
-                        "interrupt":            "0.0.6"
+                        "interrupt":            "0.0.7"
     },
     "devDependencies":
     {
