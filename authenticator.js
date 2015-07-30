@@ -1,7 +1,6 @@
 var crypto = require('crypto'),
     cadence = require('cadence/redux'),
-    Cache = require('magazine'),
-    uuid = require('node-uuid')
+    Cache = require('magazine')
 
 function Authenticator (auth) {
     this._auth = new Buffer(auth).toString('base64')
@@ -21,7 +20,9 @@ Authenticator.prototype.token = cadence(function (async, request) {
     async(function () {
         crypto.randomBytes(16, async())
     }, function (bytes) {
-        var accessToken = uuid.v4(bytes)
+        var hash = crypto.createHash('sha256')
+        hash.update(bytes)
+        var accessToken = hash.digest('hex')
         this._magazine.hold(accessToken, true).release()
         return { token_type: 'Bearer', access_token: accessToken }
     })
