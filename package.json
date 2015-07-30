@@ -27,7 +27,6 @@
                         "errorhandler":         "1.1.1",
                         "body-parser":          "1.13.2",
                         "express-auth-parser":  "0.1.2",
-                        "turnstile":            "0.0.5",
                         "magazine":             "0.0.14",
                         "node-uuid":            "1.4.1",
                         "accum":                "0.3.6",
