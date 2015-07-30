@@ -21,7 +21,6 @@
                         "cadence":              "0.0.52",
                         "connect":              "3.0.1",
                         "dispatch":             "1.0.0",
-                        "errorhandler":         "1.1.1",
                         "body-parser":          "1.13.2",
                         "express-auth-parser":  "0.1.2",
                         "magazine":             "0.0.14",
