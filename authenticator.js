@@ -1,5 +1,5 @@
 var crypto = require('crypto'),
-    cadence = require('cadence/redux'),
+    cadence = require('cadence'),
     Cache = require('magazine')
 
 function Authenticator (auth) {

@@ -1,4 +1,4 @@
-require('proof')(10, require('cadence/redux')(prove))
+require('proof')(10, require('cadence')(prove))
 
 function prove (async, assert) {
     var Authenticator = require('../../authenticator'),

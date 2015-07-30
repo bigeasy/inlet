@@ -1,4 +1,4 @@
-var cadence = require('cadence/redux')
+var cadence = require('cadence')
 var dispatch = require('dispatch')
 var Interrupt = require('interrupt'),
     interrupt = new Interrupt
