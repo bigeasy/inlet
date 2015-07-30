@@ -24,7 +24,6 @@
                         "body-parser":          "1.13.2",
                         "express-auth-parser":  "0.1.2",
                         "magazine":             "0.0.14",
-                        "newrelic":             ">= 1.11.3",
                         "vizsla":               "0.0.2",
                         "interrupt":            "0.0.6"
     },

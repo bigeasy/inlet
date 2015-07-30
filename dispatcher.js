@@ -39,7 +39,6 @@ function handle (object, method) {
             delete request.raise
             var body
             if (error) {
-                // if (!!newrelic) newrelic.noticeError(error, {})
                 try {
                     interrupt.rescue(function (error) {
                         logger.info('http', {
