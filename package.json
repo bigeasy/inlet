@@ -20,7 +20,6 @@
     {
                         "cadence":              "0.0.52",
                         "connect":              "3.0.1",
-                        "quip":                 "0.1.2",
                         "dispatch":             "1.0.0",
                         "errorhandler":         "1.1.1",
                         "body-parser":          "1.13.2",
