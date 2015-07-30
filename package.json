@@ -19,7 +19,6 @@
     "dependencies":
     {
                         "media-typer":          "0.2.0",
-                        "raw-body":             "1.2.2",
                         "cadence":              "0.0.52",
                         "connect":              "3.0.1",
                         "quip":                 "0.1.2",
