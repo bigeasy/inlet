@@ -21,7 +21,7 @@
                         "cadence":              "0.2.3",
                         "connect":              "3.4.0",
                         "dispatch":             "1.0.0",
-                        "body-parser":          "1.13.2",
+                        "body-parser":          "1.13.3",
                         "express-auth-parser":  "0.1.2",
                         "magazine":             "0.0.14",
                         "vizsla":               "0.0.3",
