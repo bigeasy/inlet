@@ -17,6 +17,7 @@ function prove (async, assert) {
         dispatcher.dispatch('GET /exception', 'exception')
         dispatcher.dispatch('GET /json', 'json')
         dispatcher.dispatch('GET /response', 'response')
+        dispatcher.dispatch('GET /resources/:id', 'resource')
         return dispatcher.createDispatcher()
     }
 
@@ -39,6 +40,10 @@ function prove (async, assert) {
     Service.prototype.response = cadence(function (async) {
         return Dispatcher.resend(200, { 'content-type': 'text/plain' }, 'responded')
     })
+
+    Service.prototype.resource = cadence(function (async, request, id) {
+        return { id: id }
+    });
 
     var service = new Service
     var dispatcher = service.dispatcher()
@@ -65,6 +70,9 @@ function prove (async, assert) {
         ua.fetch(session, { url: '/response' }, async())
     }, function (body, response) {
         assert(body.toString(), 'responded', 'json')
+        ua.fetch(session, { url: '/resources/123' }, async())
+    }, function (body, response) {
+        assert(body, { id: '123' }, 'resource id')
         server.close(async())
     })
 }

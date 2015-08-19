@@ -1,7 +1,8 @@
 var cadence = require('cadence')
 var dispatch = require('dispatch')
 var Interrupt = require('interrupt'),
-    interrupt = new Interrupt
+    interrupt = new Interrupt,
+    slice = [].slice
 
 function Dispatcher (service, logger) {
     this._dispatch = {}
@@ -26,16 +27,18 @@ Dispatcher.prototype.createDispatcher = function () {
 
 module.exports = Dispatcher
 
-var catcher = cadence(function (async, object, method, request) {
-    object[method](request, async())
+var catcher = cadence(function (async, object, method, request, vargs) {
+    var args = [request].concat(vargs, [async()])
+    object[method].apply(null, args)
 })
 
 function handle (object, method) {
     return function (request, response, next) {
         var logger = this._logger
+        var vargs = slice.call(arguments, 3)
 
         request.raise = raise
-        catcher(object, method, request, function (error, result) {
+        catcher(object, method, request, vargs, function (error, result) {
             delete request.raise
             var body
             if (error) {
