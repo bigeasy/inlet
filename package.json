@@ -24,7 +24,7 @@
                         "body-parser":          "1.13.3",
                         "express-auth-parser":  "0.1.2",
                         "magazine":             "0.0.14",
-                        "vizsla":               "0.0.4",
+                        "vizsla":               "0.0.5",
                         "interrupt":            "0.0.7"
     },
     "devDependencies":
