@@ -18,6 +18,11 @@ Dispatcher.prototype.createDispatcher = function () {
     var dispatcher = dispatch(this._dispatch)
     dispatcher.server = function () {
         return require('connect')()
+            .use(function (req, res, next) {
+                     req.on('error', function (err) { console.log('req'); console.log(err); console.log(''); })
+                     res.on('error', function (err) { console.log('res'); console.log(err); console.log(''); })
+                    return (next());
+            })
             .use(require('express-auth-parser'))
             .use(require('body-parser').json())
             .use(dispatcher)
