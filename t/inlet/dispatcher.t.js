@@ -1,21 +1,31 @@
-require('proof')(7, require('cadence')(prove))
+require('proof')(11, require('cadence')(prove))
 
 function prove (async, assert) {
     var cadence = require('cadence')
     var Dispatcher = require('../../dispatcher')
     var UserAgent = require('vizsla')
+    var Turnstile = require('turnstile')
     var http = require('http')
     var connect = require('connect')
 
+    new Dispatcher
+
+    var now = 0
     function Service () {
+        this.turnstile = new Turnstile({
+            workers: 1,
+            timeout: 5,
+            _Date: { now: function () { return now } }
+        })
     }
 
     Service.prototype.dispatcher = function () {
-        var dispatcher = new Dispatcher(this)
+        var dispatcher = new Dispatcher(this, { turnstile: this.turnstile })
         dispatcher.dispatch('GET /', 'index')
         dispatcher.dispatch('GET /error', 'error')
         dispatcher.dispatch('GET /exception', 'exception')
         dispatcher.dispatch('GET /json', 'json')
+        dispatcher.dispatch('GET /hang', 'hang')
         dispatcher.dispatch('GET /response', 'response')
         dispatcher.dispatch('GET /resources/:id', 'resource')
         return dispatcher.createDispatcher()
@@ -26,7 +36,7 @@ function prove (async, assert) {
     })
 
     Service.prototype.error = cadence(function (async, request) {
-        request.raise(401, 'Forbidden')
+        request.raise(401)
     })
 
     Service.prototype.exception = cadence(function (async, request) {
@@ -43,7 +53,16 @@ function prove (async, assert) {
 
     Service.prototype.resource = cadence(function (async, request, id) {
         return { id: id }
-    });
+    })
+
+    Service.prototype.hang = cadence(function (async, request) {
+        async(function () {
+            this.wait = async()
+            ; (this.notify)()
+        }, function () {
+            return { hang: true }
+        })
+    })
 
     var service = new Service
     var dispatcher = service.dispatcher()
@@ -60,7 +79,7 @@ function prove (async, assert) {
         ua.fetch(session, { url: '/error' }, async())
     }, function (body, response) {
         assert(response.statusCode, 401, 'error status code')
-        assert(body, { message: 'Forbidden' }, 'error message')
+        assert(body, { message: 'Unknown' }, 'error message')
         ua.fetch(session, { url: '/exception' }, async())
     }, function (body, response) {
         assert(response.statusCode, 500, 'exception status code')
@@ -73,6 +92,32 @@ function prove (async, assert) {
         ua.fetch(session, { url: '/resources/123' }, async())
     }, function (body, response) {
         assert(body, { id: '123' }, 'resource id')
+        async(function () {
+            service.notify = async()
+            async(function () {
+                ua.fetch(session, { url: '/hang' }, async())
+            }, function (body, response) {
+                assert(body, { hang: true }, 'delay replied')
+            })
+            async(function () {
+                setTimeout(async(), 250)
+            }, function () {
+                now += 1000
+                ua.fetch(session, { url: '/json' }, async())
+                service.wait()
+            }, function (body, response) {
+                assert(body, { key: 'value' }, 'flush replied')
+            })
+        })
+        async(function () {
+            setTimeout(async(), 50)
+        }, function () {
+            ua.fetch(session, { url: '/json' }, async())
+        }, function (body, response) {
+            assert(response.statusCode, 503, 'timeout code')
+            assert(body, { message: 'Service Not Available' }, 'timeout message')
+        })
+    }, function (body, response) {
         server.close(async())
     })
 }
