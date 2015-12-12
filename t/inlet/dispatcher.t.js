@@ -17,9 +17,6 @@ function prove (async, assert) {
             timeout: 5,
             _Date: { now: function () { return now } }
         })
-    }
-
-    Service.prototype.dispatcher = function () {
         var dispatcher = new Dispatcher(this, { turnstile: this.turnstile })
         dispatcher.dispatch('GET /', 'index')
         dispatcher.dispatch('GET /error', 'error')
@@ -28,7 +25,7 @@ function prove (async, assert) {
         dispatcher.dispatch('GET /hang', 'hang')
         dispatcher.dispatch('GET /response', 'response')
         dispatcher.dispatch('GET /resources/:id', 'resource')
-        return dispatcher.createDispatcher()
+        this.dispatcher = dispatcher
     }
 
     Service.prototype.index = cadence(function () {
@@ -65,9 +62,8 @@ function prove (async, assert) {
     })
 
     var service = new Service
-    var dispatcher = service.dispatcher()
 
-    var server = http.createServer(service.dispatcher().server())
+    var server = http.createServer(service.dispatcher.createWrappedDispatcher())
     var ua = new UserAgent, session = { url: 'http://127.0.0.1:8077' }
 
     async(function () {

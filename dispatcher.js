@@ -20,14 +20,15 @@ Dispatcher.prototype.dispatch = function (pattern, method) {
 }
 
 Dispatcher.prototype.createDispatcher = function () {
-    var dispatcher = dispatch(this._dispatch)
-    dispatcher.server = function () {
-        return require('connect')()
-            .use(require('express-auth-parser'))
-            .use(require('body-parser').json())
-            .use(dispatcher)
-    }
-    return dispatcher
+    return dispatch(this._dispatch)
+}
+
+// TODO Create `inlet.wrapped`.
+Dispatcher.prototype.createWrappedDispatcher = function () {
+    return require('connect')()
+        .use(require('express-auth-parser'))
+        .use(require('body-parser').json())
+        .use(this.createDispatcher())
 }
 
 Dispatcher.prototype._timeout = cadence(function (async, request) {
