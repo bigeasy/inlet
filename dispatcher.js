@@ -8,7 +8,7 @@ var slice = [].slice
 
 function Dispatcher (service, options) {
     options || (options = {})
-    this._turnstile = options.turnstile || new Turnstile({ workers: 24 })
+    this._turnstile = this.turnstile = options.turnstile || new Turnstile({ workers: 24 })
     this._dispatch = {}
     this._service = service
     this._logger = options.logger || function () {}
