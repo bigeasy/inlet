@@ -46,7 +46,7 @@ Dispatcher.prototype._respond = cadence(function (async, status, work) {
         },
         statusCode: 200,
         request: {
-            metthod: work.request.method,
+            method: work.request.method,
             header: work.request.headers,
             url: work.request.url
         }
@@ -99,7 +99,7 @@ Dispatcher.prototype._respond = cadence(function (async, status, work) {
         entry.stack = error.stack
         next(error)
     }], function () {
-        this._logger(entry)
+        this._logger('info', 'request', entry)
         return [ block.break ]
     })()
 })
