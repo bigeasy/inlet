@@ -4,20 +4,19 @@ function prove (async, assert) {
     var cadence = require('cadence')
     var Dispatcher = require('../../dispatcher')
     var UserAgent = require('vizsla')
-    var Turnstile = require('turnstile')
     var http = require('http')
     var connect = require('connect')
 
-    new Dispatcher
+    new Dispatcher({ object: null })
 
     var now = 0
     function Service () {
-        this.turnstile = new Turnstile({
+        var dispatcher = new Dispatcher({
+            object: this,
+            Date: { now: function () { return now } },
             workers: 1,
             timeout: 5,
-            _Date: { now: function () { return now } }
         })
-        var dispatcher = new Dispatcher(this, { turnstile: this.turnstile })
         dispatcher.dispatch('GET /', 'index')
         dispatcher.dispatch('GET /error', 'error')
         dispatcher.dispatch('GET /exception', 'exception')

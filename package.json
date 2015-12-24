@@ -26,7 +26,6 @@
                         "magazine":             "0.0.17",
                         "reactor":              "0.0.14",
                         "operation":            "0.0.4",
-                        "turnstile":            "0.0.17",
                         "interrupt":            "0.0.10",
                         "vizsla":               "0.0.8"
     },

@@ -1,18 +1,22 @@
 var cadence = require('cadence')
 var dispatch = require('dispatch')
 var interrupt = require('interrupt').createInterrupter('bigeasy.inlet')
-var Turnstile = require('turnstile')
 var Operation = require('operation')
 var Reactor = require('reactor')
 var slice = [].slice
 
-function Dispatcher (service, options) {
-    options || (options = {})
-    this._turnstile = this.turnstile = options.turnstile || new Turnstile({ workers: 24 })
+function Dispatcher (options) {
+    options.object || (options = { object: options })
     this._dispatch = {}
-    this._service = service
+    this._service = options.object
     this._logger = options.logger || function () {}
-    this._reactor = new Reactor({ object: this, method: '_respond' }, this._turnstile)
+    this._reactor = new Reactor({
+        operation: { object: this, method: '_respond' },
+        Date: options.Date,
+        workers: options.workers,
+        timeout: options.timeout
+    })
+    this.turnstile = this._reactor.turnstile
 }
 
 Dispatcher.prototype.dispatch = function (pattern, method) {
@@ -38,11 +42,7 @@ Dispatcher.prototype._timeout = cadence(function (async, request) {
 Dispatcher.prototype._respond = cadence(function (async, status, work) {
     var next = work.next
     var entry = {
-        turnstile: {
-            waiting: this._turnstile.waiting,
-            workers: this._turnstile.workers,
-            working: this._turnstile.working
-        },
+        turnstile: this.turnstile.health,
         statusCode: 200,
         request: {
             method: work.request.method,
