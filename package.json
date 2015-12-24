@@ -28,7 +28,7 @@
                         "operation":            "0.0.2",
                         "turnstile":            "0.0.17",
                         "vizsla":               "0.0.7",
-                        "interrupt":            "0.0.8"
+                        "interrupt":            "0.0.10"
     },
     "devDependencies":
     {

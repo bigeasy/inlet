@@ -1,6 +1,6 @@
 var cadence = require('cadence')
 var dispatch = require('dispatch')
-var interrupt = require('interrupt').createInterrupter()
+var interrupt = require('interrupt').createInterrupter('bigeasy.inlet')
 var Turnstile = require('turnstile')
 var Operation = require('operation')
 var Reactor = require('reactor')
@@ -32,7 +32,6 @@ Dispatcher.prototype.createWrappedDispatcher = function () {
 }
 
 Dispatcher.prototype._timeout = cadence(function (async, request) {
-    console.log('foo', request.url)
     request.raise(503, 'Service Not Available')
 })
 
@@ -62,18 +61,19 @@ Dispatcher.prototype._respond = cadence(function (async, status, work) {
         async(function () {
             async([function () {
                 work.operation.apply([ work.request ].concat(work.vargs, async()))
-            }, interrupt.rescue(function (error) {
-                entry.statusCode = error.statusCode
-                entry.message = error.message
-                var body = new Buffer(JSON.stringify({ message: error.message }))
-                error.context.headers['content-length'] = body.length
-                error.context.headers['content-type'] = 'application/json'
-                work.response.writeHead(error.context.statusCode,
-                                        error.message,
-                                        error.context.headers)
-                work.response.end(body)
-                return [ block.break ]
-            })])
+            }, function (error) {
+                return interrupt.rescue('bigeasy.inlet.http', function (error) {
+                    var statusCode = entry.statusCode = error.statusCode
+                    var description = entry.description = error.description
+                    var headers = error.headers
+                    var body = new Buffer(JSON.stringify({ description: description }))
+                    headers['content-length'] = body.length
+                    headers['content-type'] = 'application/json'
+                    work.response.writeHead(statusCode, description, headers)
+                    work.response.end(body)
+                    return [ block.break ]
+                })(error)
+            }])
         }, function (result, headers) {
             headers || (headers = {})
             var body
@@ -119,8 +119,12 @@ function handle (reactor, operation) {
     }
 }
 
-function raise (statusCode, message, headers) {
-    interrupt.raise(new Error, message || 'Unknown', { statusCode: statusCode, headers: headers || {} })
+function raise (statusCode, description, headers) {
+    throw interrupt(new Error('http'), {
+        statusCode: statusCode,
+        headers: headers || {},
+        description: description || 'Unknown'
+    })
 }
 
 Dispatcher.resend = function (statusCode, headers, body) {

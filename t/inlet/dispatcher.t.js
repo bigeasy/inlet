@@ -75,7 +75,7 @@ function prove (async, assert) {
         ua.fetch(session, { url: '/error' }, async())
     }, function (body, response) {
         assert(response.statusCode, 401, 'error status code')
-        assert(body, { message: 'Unknown' }, 'error message')
+        assert(body, { description: 'Unknown' }, 'error message')
         ua.fetch(session, { url: '/exception' }, async())
     }, function (body, response) {
         assert(response.statusCode, 500, 'exception status code')
@@ -111,7 +111,7 @@ function prove (async, assert) {
             ua.fetch(session, { url: '/json' }, async())
         }, function (body, response) {
             assert(response.statusCode, 503, 'timeout code')
-            assert(body, { message: 'Service Not Available' }, 'timeout message')
+            assert(body, { description: 'Service Not Available' }, 'timeout message')
         })
     }, function (body, response) {
         server.close(async())
