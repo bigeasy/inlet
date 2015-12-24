@@ -27,8 +27,8 @@
                         "reactor":              "0.0.12",
                         "operation":            "0.0.2",
                         "turnstile":            "0.0.17",
-                        "vizsla":               "0.0.7",
-                        "interrupt":            "0.0.10"
+                        "interrupt":            "0.0.10",
+                        "vizsla":               "0.0.8"
     },
     "devDependencies":
     {
