@@ -23,6 +23,7 @@
                         "dispatch":             "1.0.0",
                         "body-parser":          "1.14.1",
                         "express-auth-parser":  "0.1.2",
+                        "magazine":             "0.0.17",
                         "reactor":              "0.0.9",
                         "operation":            "0.0.2",
                         "turnstile":            "0.0.17",
