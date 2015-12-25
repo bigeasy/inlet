@@ -13,7 +13,7 @@ function Dispatcher (options) {
     this._reactor = new Reactor({
         operation: { object: this, method: '_respond' },
         Date: options.Date,
-        workers: options.workers,
+        workers: options.workers || 24,
         timeout: options.timeout
     })
     this.turnstile = this._reactor.turnstile
