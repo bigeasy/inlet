@@ -27,7 +27,6 @@ Dispatcher.prototype.createDispatcher = function () {
     return dispatch(this._dispatch)
 }
 
-// TODO Create `inlet.wrapped`.
 Dispatcher.prototype.createWrappedDispatcher = function () {
     return require('connect')()
         .use(require('express-auth-parser'))
