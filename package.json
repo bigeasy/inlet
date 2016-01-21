@@ -18,7 +18,7 @@
     },
     "dependencies":
     {
-                        "cadence":              "0.4.3",
+                        "cadence":              "1.0.x",
                         "connect":              "3.4.0",
                         "dispatch":             "1.0.0",
                         "body-parser":          "1.14.2",
