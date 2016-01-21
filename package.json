@@ -26,12 +26,12 @@
                         "magazine":             "1.0.x",
                         "reactor":              "0.0.14",
                         "operation":            "1.0.x",
-                        "interrupt":            "1.0.x",
-                        "vizsla":               "0.0.8"
+                        "interrupt":            "1.0.x"
     },
     "devDependencies":
     {
-                        "proof":                "1.0.x"
+                        "proof":                "1.0.x",
+                        "vizsla":               "1.0.x"
     },
     "scripts":
     {
