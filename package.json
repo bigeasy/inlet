@@ -18,15 +18,15 @@
     },
     "dependencies":
     {
+                        "body-parser":          "1.14.2",
                         "cadence":              "1.0.x",
                         "connect":              "3.4.0",
                         "dispatch":             "1.0.0",
-                        "body-parser":          "1.14.2",
                         "express-auth-parser":  "0.1.2",
+                        "interrupt":            "1.0.x",
                         "magazine":             "1.0.x",
-                        "reactor":              "0.0.14",
                         "operation":            "1.0.x",
-                        "interrupt":            "1.0.x"
+                        "reactor":              "0.0.14"
     },
     "devDependencies":
     {
