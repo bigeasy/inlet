@@ -26,7 +26,7 @@
                         "magazine":             "1.0.x",
                         "reactor":              "0.0.14",
                         "operation":            "1.0.x",
-                        "interrupt":            "0.0.10",
+                        "interrupt":            "1.0.x",
                         "vizsla":               "0.0.8"
     },
     "devDependencies":
