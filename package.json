@@ -25,7 +25,7 @@
                         "express-auth-parser":  "0.1.2",
                         "magazine":             "1.0.x",
                         "reactor":              "0.0.14",
-                        "operation":            "0.0.4",
+                        "operation":            "1.0.x",
                         "interrupt":            "0.0.10",
                         "vizsla":               "0.0.8"
     },
