@@ -23,7 +23,7 @@
                         "connect":              "3.4.0",
                         "dispatch":             "1.0.0",
                         "express-auth-parser":  "0.1.2",
-                        "interrupt":            "1.0.x",
+                        "interrupt":            "1.x",
                         "magazine":             "1.0.x",
                         "operation":            "1.0.x",
                         "reactor":              "1.0.x"
