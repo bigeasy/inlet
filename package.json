@@ -26,7 +26,7 @@
                         "interrupt":            "1.x",
                         "magazine":             "1.x",
                         "operation":            "1.x",
-                        "reactor":              "1.0.x"
+                        "reactor":              "1.x"
     },
     "devDependencies":
     {
