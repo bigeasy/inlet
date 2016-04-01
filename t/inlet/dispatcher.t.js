@@ -14,7 +14,7 @@ function prove (async, assert) {
         var dispatcher = new Dispatcher({
             object: this,
             Date: { now: function () { return now } },
-            workers: 1,
+            turnstiles: 1,
             timeout: 5,
         })
         dispatcher.dispatch('GET /', 'index')
