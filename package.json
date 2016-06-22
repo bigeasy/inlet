@@ -1,41 +1,40 @@
 {
-    "name":             "inlet",
-    "version":          "1.1.2",
-    "author":           "Alan Gutierrez <alan@prettyrobots.com>",
-    "description":      "A micro-framework for HTTP end points.",
+    "name":                 "inlet",
+    "version":              "1.1.2",
+    "author":               "Alan Gutierrez <alan@prettyrobots.com>",
+    "description":          "A micro-framework for HTTP end points.",
     "keywords":
     [
-                        "http", "https", "rest", "json", "curl"
+                            "http", "https", "rest", "json", "curl"
     ],
-    "contributors":     [],
-    "homepage":         "https://github.com/bigeasy/inlet",
-    "bugs":             "https://github.com/bigeasy/inlet/issues",
-    "license":          "MIT",
+    "homepage":             "https://github.com/bigeasy/inlet",
+    "bugs":                 "https://github.com/bigeasy/inlet/issues",
+    "license":              "MIT",
     "repository":
     {
-                        "type": "git",
-                        "url": "http://github.com/bigeasy/inlet.git"
+                            "type": "git",
+                            "url": "http://github.com/bigeasy/inlet.git"
     },
     "dependencies":
     {
-                        "body-parser":          "1.14.2",
-                        "cadence":              "1.x",
-                        "connect":              "3.4.0",
-                        "dispatch":             "1.0.0",
-                        "express-auth-parser":  "0.1.2",
-                        "interrupt":            "2.1.x",
-                        "magazine":             "1.x",
-                        "operation":            "1.x",
-                        "reactor":              "2.x",
-                        "rescue":               "2.2.x"
+                            "body-parser":                  "1.14.2",
+                            "cadence":                      "1.x",
+                            "connect":                      "3.4.0",
+                            "dispatch":                     "1.0.0",
+                            "express-auth-parser":          "0.1.2",
+                            "interrupt":                    "2.1.x",
+                            "magazine":                     "1.x",
+                            "operation":                    "1.x",
+                            "reactor":                      "2.x",
+                            "rescue":                       "2.2.x"
     },
     "devDependencies":
     {
-                        "proof":                "1.x",
-                        "vizsla":               "1.x"
+                            "proof":                        "1.x",
+                            "vizsla":                       "1.x"
     },
     "scripts":
     {
-                        "test": "proof platform win32 && proof test */*/*.t.js || t/test"
+                            "test": "proof platform win32 && proof test */*/*.t.js || t/test"
     }
 }
