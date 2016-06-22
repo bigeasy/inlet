@@ -1,12 +1,12 @@
 {
     "name":                 "inlet",
     "version":              "1.1.2",
-    "author":               "Alan Gutierrez <alan@prettyrobots.com>",
     "description":          "A micro-framework for HTTP end points.",
     "keywords":
     [
                             "http", "https", "rest", "json", "curl"
     ],
+    "author":               "Alan Gutierrez <alan@prettyrobots.com>",
     "homepage":             "https://github.com/bigeasy/inlet",
     "bugs":                 "https://github.com/bigeasy/inlet/issues",
     "license":              "MIT",
