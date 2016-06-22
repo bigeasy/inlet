@@ -3,6 +3,7 @@ var dispatch = require('dispatch')
 var interrupt = require('interrupt').createInterrupter('bigeasy.inlet')
 var Operation = require('operation')
 var Reactor = require('reactor')
+var rescue = require('rescue')
 var slice = [].slice
 
 function Dispatcher (options) {
@@ -62,7 +63,7 @@ Dispatcher.prototype._respond = cadence(function (async, status, work) {
             async([function () {
                 work.operation.apply([ work.request ].concat(work.vargs, async()))
             }, function (error) {
-                return interrupt.rescue('bigeasy.inlet.http', function (error) {
+                return rescue(/^bigeasy.inlet#http$/m, function (error) {
                     var statusCode = entry.statusCode = error.statusCode
                     var description = entry.description = error.description
                     var headers = error.headers
@@ -120,10 +121,13 @@ function handle (reactor, operation) {
 }
 
 function raise (statusCode, description, headers) {
-    throw interrupt(new Error('http'), {
-        statusCode: statusCode,
-        headers: headers || {},
-        description: description || 'Unknown'
+    throw interrupt({
+        name: 'http',
+        properties: {
+            statusCode: statusCode,
+            headers: headers || {},
+            description: description || 'Unknown'
+        }
     })
 }
 

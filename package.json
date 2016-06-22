@@ -23,10 +23,11 @@
                         "connect":              "3.4.0",
                         "dispatch":             "1.0.0",
                         "express-auth-parser":  "0.1.2",
-                        "interrupt":            "1.0.x",
+                        "interrupt":            "2.1.x",
                         "magazine":             "1.x",
                         "operation":            "1.x",
-                        "reactor":              "2.x"
+                        "reactor":              "2.x",
+                        "rescue":               "2.2.x"
     },
     "devDependencies":
     {
