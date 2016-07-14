@@ -1,7 +1,7 @@
 require('proof')(10, require('cadence')(prove))
 
 function prove (async, assert) {
-    var Authenticator = require('../../authenticator'),
+    var Authenticator = require('../authenticator'),
         UserAgent = require('vizsla')
 
     assert(!Authenticator.isBearer({}), 'no authentication')

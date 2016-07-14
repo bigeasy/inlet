@@ -2,7 +2,7 @@ require('proof')(11, require('cadence')(prove))
 
 function prove (async, assert) {
     var cadence = require('cadence')
-    var Dispatcher = require('../../dispatcher')
+    var Dispatcher = require('../dispatcher')
     var UserAgent = require('vizsla')
     var http = require('http')
     var connect = require('connect')
