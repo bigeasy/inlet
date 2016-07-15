@@ -4,6 +4,7 @@ var interrupt = require('interrupt').createInterrupter('bigeasy.inlet')
 var Operation = require('operation')
 var Reactor = require('reactor')
 var rescue = require('rescue')
+var delta = require('delta')
 var slice = [].slice
 
 function Dispatcher (options) {
@@ -80,8 +81,16 @@ Dispatcher.prototype._respond = cadence(function (async, status, work) {
             var body
             switch (typeof result) {
             case 'function':
-                // todo: delta on response end.
-                result(work.response)
+                async(function () {
+                    delta(async()).ee(work.response).on('finish')
+                    if (result.length == 2) {
+                        result.call(work.operation.object, work.response, async())
+                    } else {
+                        result.call(work.operation.object, work.response)
+                    }
+                }, function () {
+                    return []
+                })
                 return
             case 'string':
                 body = new Buffer(result)

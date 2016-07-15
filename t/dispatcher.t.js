@@ -1,4 +1,4 @@
-require('proof')(11, require('cadence')(prove))
+require('proof')(12, require('cadence')(prove))
 
 function prove (async, assert) {
     var cadence = require('cadence')
@@ -23,6 +23,7 @@ function prove (async, assert) {
         dispatcher.dispatch('GET /json', 'json')
         dispatcher.dispatch('GET /hang', 'hang')
         dispatcher.dispatch('GET /response', 'response')
+        dispatcher.dispatch('GET /callbacky', 'callbacky')
         dispatcher.dispatch('GET /resources/:id', 'resource')
         this.dispatcher = dispatcher
     }
@@ -49,6 +50,16 @@ function prove (async, assert) {
 
     Service.prototype.resource = cadence(function (async, request, id) {
         return { id: id }
+    })
+
+    Service.prototype.callbacky = cadence(function (async) {
+        return cadence(function (async, response) {
+            response.writeHeader(200, {
+                'content-type': 'text/plain',
+                'content-length': 2
+            })
+            response.end('x\n')
+        })
     })
 
     Service.prototype.hang = cadence(function (async, request) {
@@ -84,6 +95,9 @@ function prove (async, assert) {
         ua.fetch(session, { url: '/response' }, async())
     }, function (body, response) {
         assert(body.toString(), 'responded', 'json')
+        ua.fetch(session, { url: '/callbacky' }, async())
+    }, function (body, response) {
+        assert(body.toString(), 'x\n', 'callbacky')
         ua.fetch(session, { url: '/resources/123' }, async())
     }, function (body, response) {
         assert(body, { id: '123' }, 'resource id')
