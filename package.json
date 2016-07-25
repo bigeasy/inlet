@@ -18,21 +18,21 @@
     "dependencies":
     {
                             "body-parser":                  "1.14.2",
-                            "cadence":                      "1.x",
+                            "cadence":                      "1.0.x",
                             "connect":                      "3.4.0",
                             "delta":                        "1.1.x",
                             "dispatch":                     "1.0.0",
                             "express-auth-parser":          "0.1.2",
                             "interrupt":                    "2.1.x",
-                            "magazine":                     "1.x",
-                            "operation":                    "1.x",
-                            "reactor":                      "2.x",
+                            "magazine":                     "1.0.x",
+                            "operation":                    "1.2.x",
+                            "reactor":                      "2.2.x",
                             "rescue":                       "2.2.x"
     },
     "devDependencies":
     {
-                            "proof":                        "1.x",
-                            "vizsla":                       "1.x"
+                            "proof":                        "1.0.x",
+                            "vizsla":                       "1.6.x"
     },
     "scripts":
     {
