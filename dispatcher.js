@@ -33,6 +33,7 @@ Dispatcher.prototype.createDispatcher = function () {
 Dispatcher.prototype.createWrappedDispatcher = function () {
     return require('connect')()
         .use(require('express-auth-parser'))
+        .use(require('body-parser').urlencoded({ extended: false }))
         .use(require('body-parser').json())
         .use(this.createDispatcher())
 }
