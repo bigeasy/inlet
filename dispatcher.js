@@ -33,8 +33,9 @@ Dispatcher.prototype.createDispatcher = function () {
 Dispatcher.prototype.createWrappedDispatcher = function () {
     return require('connect')()
         .use(require('express-auth-parser'))
-        .use(require('body-parser').urlencoded({ extended: false }))
-        .use(require('body-parser').json())
+// TODO Configurable.
+        .use(require('body-parser').urlencoded({ extended: false, limit: '64mb' }))
+        .use(require('body-parser').json({ limit: '64mb' }))
         .use(this.createDispatcher())
 }
 
