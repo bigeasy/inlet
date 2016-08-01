@@ -70,7 +70,7 @@ Dispatcher.prototype._respond = cadence(function (async, status, work) {
                     var statusCode = entry.statusCode = error.statusCode
                     var description = entry.description = error.description
                     var headers = error.headers
-                    var body = new Buffer(JSON.stringify({ description: description }))
+                    var body = new Buffer(JSON.stringify({ description: description }) + '\n')
                     headers['content-length'] = body.length
                     headers['content-type'] = 'application/json'
                     work.response.writeHead(statusCode, description, headers)
@@ -99,7 +99,7 @@ Dispatcher.prototype._respond = cadence(function (async, status, work) {
                 break
             default:
                 headers['content-type'] = 'application/json'
-                body = new Buffer(JSON.stringify(result))
+                body = new Buffer(JSON.stringify(result) + '\n')
                 break
             }
             headers['content-length'] = body.length
