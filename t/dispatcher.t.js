@@ -1,4 +1,4 @@
-require('proof')(12, require('cadence')(prove))
+require('proof/redux')(12, require('cadence')(prove))
 
 function prove (async, assert) {
     var cadence = require('cadence')
