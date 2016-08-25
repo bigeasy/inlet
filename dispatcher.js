@@ -66,17 +66,47 @@ Dispatcher.prototype._respond = cadence(function (async, status, work) {
             async([function () {
                 work.operation.apply([ work.request ].concat(work.vargs, async()))
             }, function (error) {
-                return rescue(/^bigeasy.inlet#http$/m, function (error) {
-                    var statusCode = entry.statusCode = error.statusCode
-                    var description = entry.description = error.description
-                    var headers = error.headers
-                    var body = new Buffer(JSON.stringify({ description: description }) + '\n')
-                    headers['content-length'] = body.length
-                    headers['content-type'] = 'application/json'
-                    work.response.writeHead(statusCode, description, headers)
-                    work.response.end(body)
-                    return [ block.break ]
-                })(error)
+                for (;;) {
+                    try {
+                        return rescue(/^bigeasy.inlet#http$/m, function (error) {
+                            var statusCode = entry.statusCode = error.statusCode
+                            var description = entry.description = error.description
+                            var headers = error.headers
+                            var body = new Buffer(JSON.stringify({ description: description }) + '\n')
+                            headers['content-length'] = body.length
+                            headers['content-type'] = 'application/json'
+                            work.response.writeHead(statusCode, description, headers)
+                            work.response.end(body)
+                            return [ block.break ]
+                        })(error)
+                    } catch (ignore) {
+                        if (
+                            typeof error == 'number' &&
+                            Number.isInteger(error) &&
+                            Math.floor(error / 100) <= 5 &&
+                            Math.floor(error / 100) >= 3
+                        ) {
+                            error = { statusCode: error }
+                        } else if (typeof error == 'string') {
+                            error = { statusCode: 307, location: error }
+                        }
+                        if (
+                            typeof error == 'object' &&
+                            typeof error.statusCode == 'number' &&
+                            Number.isInteger(error.statusCode) &&
+                            Math.floor(error.statusCode / 100) <= 5 &&
+                            Math.floor(error.statusCode / 100) >= 3
+                        ) {
+                            var properties = createProperties(error)
+                            if (error.location) {
+                                properties.headers.location = error.location
+                            }
+                            error = interrupt({ name: 'http', properties: properties })
+                        } else {
+                            throw error
+                        }
+                    }
+                }
             }])
         }, function (result, headers) {
             headers || (headers = {})
@@ -131,14 +161,22 @@ function handle (reactor, operation) {
     }
 }
 
+function createProperties (properties) {
+    return {
+        statusCode: properties.statusCode,
+        headers: properties.headers || {},
+        description: properties.description || 'Unknown'
+    }
+}
+
 function raise (statusCode, description, headers) {
     throw interrupt({
         name: 'http',
-        properties: {
+        properties: createProperties({
             statusCode: statusCode,
-            headers: headers || {},
-            description: description || 'Unknown'
-        }
+            description: description,
+            headers: headers
+        })
     })
 }
 

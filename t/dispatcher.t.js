@@ -1,4 +1,4 @@
-require('proof/redux')(12, require('cadence')(prove))
+require('proof/redux')(17, require('cadence')(prove))
 
 function prove (async, assert) {
     var cadence = require('cadence')
@@ -19,6 +19,8 @@ function prove (async, assert) {
         })
         dispatcher.dispatch('GET /', 'index')
         dispatcher.dispatch('GET /error', 'error')
+        dispatcher.dispatch('GET /throw/number', 'throwNumber')
+        dispatcher.dispatch('GET /throw/redirect', 'throwRedirect')
         dispatcher.dispatch('GET /exception', 'exception')
         dispatcher.dispatch('GET /json', 'json')
         dispatcher.dispatch('GET /hang', 'hang')
@@ -34,6 +36,14 @@ function prove (async, assert) {
 
     Service.prototype.error = cadence(function (async, request) {
         request.raise(401)
+    })
+
+    Service.prototype.throwNumber = cadence(function (async, request) {
+        throw 401
+    })
+
+    Service.prototype.throwRedirect = cadence(function (async, request) {
+        throw '/redirect'
     })
 
     Service.prototype.exception = cadence(function (async, request) {
@@ -86,6 +96,15 @@ function prove (async, assert) {
     }, function (body, response) {
         assert(response.statusCode, 401, 'error status code')
         assert(body, { description: 'Unknown' }, 'error message')
+        ua.fetch(session, { url: '/throw/number' }, async())
+    }, function (body, response) {
+        assert(response.statusCode, 401, 'thrown numbber status code')
+        assert(body, { description: 'Unknown' }, 'thrown number message')
+        ua.fetch(session, { url: '/throw/redirect' }, async())
+    }, function (body, response) {
+        assert(response.statusCode, 307, 'thrown redirect status code')
+        assert(response.headers.location, '/redirect', 'thrown redirect location')
+        assert(body, { description: 'Unknown' }, 'thrown redirect message')
         ua.fetch(session, { url: '/exception' }, async())
     }, function (body, response) {
         assert(response.statusCode, 500, 'exception status code')
