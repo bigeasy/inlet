@@ -186,7 +186,7 @@ Dispatcher.resend = function (statusCode, headers, body) {
             'content-type': headers['content-type'],
             'content-length': body.length
         }
-        response.writeHeader(statusCode, h)
+        response.writeHead(statusCode, h)
         response.end(body)
     }
 }
