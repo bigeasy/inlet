@@ -23,7 +23,7 @@
                             "delta":                        "1.2.x",
                             "dispatch":                     "1.0.1",
                             "express-auth-parser":          "0.1.2",
-                            "interrupt":                    "2.1.x",
+                            "interrupt":                    "5.0.x",
                             "magazine":                     "1.0.x",
                             "operation":                    "1.2.x",
                             "reactor":                      "2.2.x",
