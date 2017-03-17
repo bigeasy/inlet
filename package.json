@@ -32,7 +32,7 @@
     "devDependencies":
     {
                             "proof":                        "1.2.5",
-                            "vizsla":                       "1.6.x"
+                            "vizsla":                       "2.0.4"
     },
     "scripts":
     {
