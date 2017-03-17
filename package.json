@@ -21,7 +21,7 @@
                             "cadence":                      "1.0.x",
                             "connect":                      "3.6.0",
                             "delta":                        "1.2.x",
-                            "dispatch":                     "1.0.0",
+                            "dispatch":                     "1.0.1",
                             "express-auth-parser":          "0.1.2",
                             "interrupt":                    "2.1.x",
                             "magazine":                     "1.0.x",
