@@ -27,7 +27,7 @@
                             "magazine":                     "3.0.x",
                             "operation":                    "1.2.x",
                             "reactor":                      "2.2.x",
-                            "rescue":                       "2.2.x"
+                            "rescue":                       "3.0.x"
     },
     "devDependencies":
     {
