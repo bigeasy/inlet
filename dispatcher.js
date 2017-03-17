@@ -101,7 +101,7 @@ Dispatcher.prototype._respond = cadence(function (async, status, work) {
                             if (error.location) {
                                 properties.headers.location = error.location
                             }
-                            error = interrupt({ name: 'http', properties: properties })
+                            error = interrupt('http', properties)
                         } else {
                             throw error
                         }
@@ -170,14 +170,11 @@ function createProperties (properties) {
 }
 
 function raise (statusCode, description, headers) {
-    throw interrupt({
-        name: 'http',
-        properties: createProperties({
-            statusCode: statusCode,
-            description: description,
-            headers: headers
-        })
-    })
+    throw interrupt('http', createProperties({
+        statusCode: statusCode,
+        description: description,
+        headers: headers
+    }))
 }
 
 Dispatcher.resend = function (statusCode, headers, body) {
