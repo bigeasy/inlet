@@ -2,13 +2,22 @@ var cadence = require('cadence')
 var dispatch = require('dispatch')
 var interrupt = require('interrupt').createInterrupter('bigeasy.inlet')
 var Operation = require('operation')
-var Reactor = require('reactor')
+var Turnstile = require('turnstile')
 var rescue = require('rescue')
 var delta = require('delta')
 var slice = [].slice
 
-function Dispatcher (options) {
-    options.object || (options = { object: options })
+function Constructor () {
+    this._dispatch = {}
+}
+
+Constructor.prototype.dispatch = function () {
+    var vargs = Array.prototype.slice.call(arguments)
+    this._dispatch[vargs.shift()] = handle(this._turnstile, Operation(vargs, { object: this._object }))
+}
+
+function Dispatcher (object, constructor, options) {
+    options || (options = {})
     this._dispatch = {}
     this._service = options.object
     this._logger = options.logger || function () {}
