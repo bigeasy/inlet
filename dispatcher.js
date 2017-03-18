@@ -82,7 +82,8 @@ Dispatcher.prototype._respond = cadence(function (async, status, work) {
                     } catch (ignore) {
                         if (
                             typeof error == 'number' &&
-                            Number.isInteger(error) &&
+                            !isNaN(error) &&
+                            (error | 0) === error &&
                             Math.floor(error / 100) <= 5 &&
                             Math.floor(error / 100) >= 3
                         ) {
@@ -93,7 +94,8 @@ Dispatcher.prototype._respond = cadence(function (async, status, work) {
                         if (
                             typeof error == 'object' &&
                             typeof error.statusCode == 'number' &&
-                            Number.isInteger(error.statusCode) &&
+                            !isNaN(error.statusCode) &&
+                            (error.statusCode | 0) === error.statusCode &&
                             Math.floor(error.statusCode / 100) <= 5 &&
                             Math.floor(error.statusCode / 100) >= 3
                         ) {
