@@ -20,22 +20,13 @@
     },
     "dependencies":
     {
-                            "body-parser":                  "1.17.1",
                             "cadence":                      "1.0.x",
-                            "connect":                      "3.6.0",
-                            "delta":                        "1.2.x",
-                            "dispatch":                     "1.0.1",
-                            "express-auth-parser":          "0.1.2",
-                            "interrupt":                    "5.0.x",
-                            "magazine":                     "3.0.x",
-                            "operation":                    "1.2.x",
-                            "reactor":                      "2.4.x",
-                            "rescue":                       "3.0.x"
+                            "olio":                         "0.3.x",
+                            "turnstile":                    "3.2.x"
     },
     "devDependencies":
     {
-                            "proof":                        "1.2.x",
-                            "vizsla":                       "2.0.4"
+                            "proof":                        "3.0.x"
     },
     "scripts":
     {
