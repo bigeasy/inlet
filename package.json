@@ -21,12 +21,15 @@
     "dependencies":
     {
                             "cadence":                      "1.0.x",
-                            "olio":                         "0.3.x",
+                            "conduit":                      "0.16.x",
+                            "destructible":                 "0.17.x",
+                            "olio":                         "0.4.x",
                             "turnstile":                    "3.2.x"
     },
     "devDependencies":
     {
-                            "proof":                        "3.0.x"
+                            "proof":                        "3.0.x",
+                            "signal":                       "3.2.x"
     },
     "scripts":
     {

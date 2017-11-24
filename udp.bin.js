@@ -28,9 +28,15 @@
     ___ . ___
  */
 require('arguable')(module, require('cadence')(function (async, program) {
-    var udp = require('./udp')
+    var Queue = require('./queue')
+    var Converter = require('./converter')
+
+    var dgram = require('dgram')
+
     var Caller = require('conduit/caller')
     var Olio = require('olio')
+
+    var Destructible = require('destructible')
 
     var olio = new Olio(program, function (constructor) {
         constructor.sender(program.argv, function () {
@@ -38,26 +44,24 @@ require('arguable')(module, require('cadence')(function (async, program) {
         })
     })
 
-    var Destructible = require('destructible')
     var destructible = new Destructible(3000, 'inlet.udp')
-
     program.on('shutdown', destructible.destroy.bind(destructible))
     destructible.completed.wait(async())
-
-    var finalist = require('finalist')
 
     async([function () {
         destructible.destroy()
     }], function () {
-        finalist(function (callback) {
-            destructible.completed.wait(callback)
-            olio.ready.wait(callback)
-        }, async())
+        olio.listen(destructible.monitor('olio'))
+        Signal.first(destructible.completed, olio.ready, async())
     }, function () {
-        var dgram = require('dgram')
         var socket = dgram.createSocket('udp4')
-        socket.on('message', function (chunk) { queue.push(chunk) })
-        program.ultimate.bind.listen(socket, async())
+        async(function () {
+            socket.on('message', function (chunk) { queue.push(chunk) })
+            program.ultimate.bind.listen(socket, async())
+        }, function () {
+            destructible.addDestructor('socket', socket, 'close')
+            delta(destructible.monitor('listen')).ee(socket).on('close')
+        })
     }, function () {
         destructible.completed.wait(async())
     })
