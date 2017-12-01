@@ -1,0 +1,39 @@
+{
+    "name":                 "inlet",
+    "version":              "2.1.0",
+    "description":
+
+      "Root executable for Inlet server intake composition.",
+
+    "keywords":
+    [
+                            "consensus", "discovery"
+    ],
+    "author":               "Alan Gutierrez <alan@prettyrobots.com>",
+    "homepage":             "https://github.com/bigeasy/inlet",
+    "bugs":                 "https://github.com/bigeasy/inlet/issues",
+    "license":              "MIT",
+    "repository":
+    {
+                            "type": "git",
+                            "url": "http://github.com/bigeasy/inlet.git"
+    },
+    "dependencies":
+    {
+                            "arguable":                     "6.1.x",
+                            "cadence":                      "1.0.x"
+    },
+    "devDependencies":
+    {
+                            "proof":                        "3.0.x"
+    },
+    "main":                 "inlet.bin",
+    "bin":
+    {
+                            "inlet":                        "inlet.bin.js"
+    },
+    "scripts":
+    {
+                            "test": "proof test t/*.t.js"
+    }
+}

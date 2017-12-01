@@ -1,7 +1,7 @@
 /.wiseguy
 /docs
 /node_modules
+/*/node_modules/*
+!/inlet.executable/node_modules/inlet.test.js
 /.proof.out
 /coverage
-.DS_Store
-/npm-debug.log
