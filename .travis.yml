@@ -13,5 +13,5 @@ branches:
     - travis-ci
 
 before_install:
-  - npm install
-  - npm install istanbul coveralls
+  - npm install proof istanbul coveralls
+  - for dir in mingle.*; do (cd $dir && npm install); done
