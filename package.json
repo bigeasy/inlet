@@ -1,4 +1,5 @@
 {
+    "private":              true,
     "name":                 "inlet",
     "version":              "2.1.0",
     "description":
@@ -20,17 +21,10 @@
     },
     "dependencies":
     {
-                            "arguable":                     "6.1.x",
-                            "cadence":                      "1.0.x",
-                            "conduit":                      "0.16.x",
-                            "destructible":                 "0.17.x",
-                            "olio":                         "0.4.x",
-                            "turnstile":                    "3.2.x"
     },
     "devDependencies":
     {
-                            "proof":                        "3.0.x",
-                            "signal":                       "3.2.x"
+                            "proof":                        "3.0.x"
     },
     "scripts":
     {

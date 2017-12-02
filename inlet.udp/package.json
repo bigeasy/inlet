@@ -1,0 +1,40 @@
+{
+    "name":                 "inlet.udp",
+    "version":              "9.9.9",
+    "description":
+
+      "A micro-framework for HTTP end points.",
+
+    "keywords":
+    [
+                            "udp",  "socket", "multiprocess"
+    ],
+    "author":               "Alan Gutierrez <alan@prettyrobots.com>",
+    "homepage":             "https://github.com/bigeasy/inlet",
+    "bugs":                 "https://github.com/bigeasy/inlet/issues",
+    "license":              "MIT",
+    "repository":
+    {
+                            "type": "git",
+                            "url": "http://github.com/bigeasy/inlet.git"
+    },
+    "dependencies":
+    {
+                            "arguable":                     "6.1.x",
+                            "cadence":                      "1.0.x",
+                            "conduit":                      "0.16.x",
+                            "destructible":                 "0.17.x",
+                            "olio":                         "0.4.x",
+                            "turnstile":                    "3.2.x"
+    },
+    "devDependencies":
+    {
+                            "proof":                        "3.0.x",
+                            "signal":                       "3.2.x"
+    },
+    "main":                 "udp.bin",
+    "scripts":
+    {
+                            "test": "proof test t/*.t.js"
+    }
+}
