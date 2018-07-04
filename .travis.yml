@@ -13,5 +13,6 @@ branches:
     - travis-ci
 
 before_install:
-  - npm install proof istanbul coveralls
-  - for dir in inlet.*; do (cd $dir && npm install); done
+  - for dir in inlet.*; do (cd $dir && npm install --no-package-lock --no-save); done
+  - npm install --no-package-lock --no-save
+  - npm install -g proof istanbul coveralls

@@ -2,12 +2,12 @@
 
 set -e
 
-if [ ! -e node_modules/.bin/istanbul ]; then
+if ! which istanbul > /dev/null; then
     cat << EOF 1>&2
 
 Istanbul is required to run coverage. Install Istanbul:
 
-    npm install istanbul
+    npm install -g istanbul
 
 EOF
     exit 1
