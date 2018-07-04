@@ -29,7 +29,6 @@
  */
 require('arguable')(module, require('cadence')(function (async, program) {
     var Queue = require('./queue')
-    var Converter = require('./converter')
 
     var dgram = require('dgram')
 
