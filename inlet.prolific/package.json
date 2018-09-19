@@ -1,0 +1,39 @@
+{
+    "name":                 "inlet.prolific",
+    "version":              "9.9.9",
+    "description":
+
+      "Send messages through a Prolific pipeline.",
+
+    "keywords":
+    [
+                            "udp",  "socket", "multiprocess"
+    ],
+    "author":               "Alan Gutierrez <alan@prettyrobots.com>",
+    "homepage":             "https://github.com/bigeasy/inlet",
+    "bugs":                 "https://github.com/bigeasy/inlet/issues",
+    "license":              "MIT",
+    "repository":
+    {
+                            "type": "git",
+                            "url": "bigeasy/inlet"
+    },
+    "dependencies":
+    {
+                            "arguable":                     "6.8.x",
+                            "cadence":                      "1.0.x",
+                            "conduit":                      "2.13.x",
+                            "destructible":                 "0.33.x",
+                            "olio":                         "0.16.x",
+                            "prolific.logger":              "8.1.x"
+    },
+    "devDependencies":
+    {
+                            "proof":                        "3.0.x"
+    },
+    "main":                 "udp.bin",
+    "scripts":
+    {
+                            "test": "proof test t/*.t.js"
+    }
+}
