@@ -31,7 +31,7 @@ require('arguable')(module, function (program, callback) {
 
     var sink = require('prolific.resolver').sink
 
-    var Procedure = require('conduit/procedure')
+    var Procession = require('procession')
 
     var Olio = require('olio')
 
@@ -40,14 +40,13 @@ require('arguable')(module, function (program, callback) {
     cadence(function (async) {
         async(function () {
             destructible.monitor('olio', Olio, cadence(function (async, destructible) {
-                async(function () {
-                    destructible.monitor('procedure', Procedure, cadence(function (async, envelope) {
-                        sink.queue.push(envelope)
-                    }), async())
-                }, function (procedure) {
-                    destructible.destruct.wait(procedure.outbox, 'end')
-                    return procedure
-                })
+                var receiver = { inbox: new Procession, outbox: new Procession }
+                receiver.inbox.pump(cadence(function (async, envelope) {
+                    sink.queue.push(envelope)
+                    return []
+                }), destructible.monitor('outbox'))
+                destructible.destruct.wait(receiver.outbox, 'end')
+                return receiver
             }), async())
         }, function () {
             program.ready.unlatch()

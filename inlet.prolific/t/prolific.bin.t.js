@@ -10,7 +10,7 @@ function prove (okay, callback) {
 
     var Mock = require('olio/mock')
 
-    var Caller = require('conduit/caller')
+    var Procession = require('procession')
 
     var cadence = require('cadence')
 
@@ -26,20 +26,18 @@ function prove (okay, callback) {
             mock.initialize('self', 0)
             program.ready.wait(async())
         }, function () {
-            destructible.monitor('caller', Caller, async())
-        }, function (caller) {
             async(function () {
-                mock.sender('udp', 1, caller)
+                var receiver = { inbox: new Procession, outbox: new Procession }
                 require('prolific.resolver').sink.queue = {
                     push: function (envelope) {
-                        okay(envelope, { a: 1 }, 'envelope')
+                        if (envelope != null) {
+                            okay(envelope, { a: 1 }, 'envelope')
+                        }
                     }
                 }
-                caller.invoke({ a: 1 }, async())
-            }, function () {
-                caller.outbox.push(null)
-                caller.inbox.push(null)
-                mock.sender('udp', 1, caller)
+                mock.sender('udp', 1, receiver)
+                receiver.outbox.push({ a: 1 })
+                receiver.outbox.push(null)
             })
         })
     })(destructible.monitor('test'))
