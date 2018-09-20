@@ -20,17 +20,18 @@
     },
     "dependencies":
     {
-                            "arguable":                     "6.1.x",
+                            "arguable":                     "6.8.x",
                             "cadence":                      "1.0.x",
-                            "conduit":                      "0.16.x",
-                            "destructible":                 "0.17.x",
-                            "olio":                         "0.4.x",
-                            "turnstile":                    "3.2.x"
+                            "conduit":                      "2.13.x",
+                            "destructible":                 "0.33.x",
+                            "foremost":                     "0.0.x",
+                            "olio":                         "0.16.x",
+                            "prolific.logger":              "8.1.x",
+                            "prolific.shuttle":             "20.8.x"
     },
     "devDependencies":
     {
-                            "proof":                        "3.0.x",
-                            "signal":                       "3.2.x"
+                            "proof":                        "3.0.x"
     },
     "main":                 "udp.bin",
     "scripts":

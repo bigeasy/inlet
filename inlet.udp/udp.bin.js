@@ -10,13 +10,17 @@
 
         interface and port to bind to
 
-      -k, --key <method>
+      -t, --to <name>
 
-        key material for hashing
+        name of service to send message to
 
       -j, --json
 
-        if true, input is parsed as JSON
+        parse message as JSON
+
+      -i, --id <string>
+
+        extractor for id
 
       --help              display this message
 
@@ -27,8 +31,11 @@
 
     ___ . ___
  */
-require('arguable')(module, require('cadence')(function (async, program) {
-    var Queue = require('./queue')
+require('arguable')(module, function (program, callback) {
+    program.required('bind', 'to', 'id')
+    program.validate(require('arguable/bindable'), 'bind')
+
+    var logger = require('prolific.logger').createLogger('inlet.udp')
 
     var dgram = require('dgram')
 
@@ -36,32 +43,58 @@ require('arguable')(module, require('cadence')(function (async, program) {
     var Olio = require('olio')
 
     var Destructible = require('destructible')
+    var destructible = new Destructible('inlet/udp.bin')
 
-    var olio = new Olio(program, function (constructor) {
-        constructor.sender(program.argv, function () {
-            return new Caller
-        })
-    })
-
-    var destructible = new Destructible(3000, 'inlet.udp')
     program.on('shutdown', destructible.destroy.bind(destructible))
-    destructible.completed.wait(async())
 
-    async([function () {
-        destructible.destroy()
-    }], function () {
-        olio.listen(destructible.monitor('olio'))
-        Signal.first(destructible.completed, olio.ready, async())
-    }, function () {
-        var socket = dgram.createSocket('udp4')
+    var shuttle = require('foremost')('prolific.shuttle')
+    shuttle.start(logger)
+    destructible.destruct.wait(shuttle, 'close')
+
+    destructible.completed.wait(callback)
+
+    var Converter = require('./converter')
+
+    var convert = Converter(program.ultimate.json)
+    var extract = Function.apply(Function, [].concat(
+        '$', Object.keys(global), 'return ' + program.ultimate.id
+    ))
+
+    var Keyify = require('keyify')
+
+    var delta = require('delta')
+
+    var cadence = require('cadence')
+
+    cadence(function (async) {
         async(function () {
-            socket.on('message', function (chunk) { queue.push(chunk) })
-            program.ultimate.bind.listen(socket, async())
-        }, function () {
-            destructible.addDestructor('socket', socket, 'close')
-            delta(destructible.monitor('listen')).ee(socket).on('close')
+            destructible.monitor('olio', Olio, async())
+        }, function (olio) {
+            olio.sender(program.ultimate.to, cadence(function (async, destructible) {
+                destructible.monitor('caller', Caller, async())
+            }), async())
+        }, function (sender) {
+            var socket = dgram.createSocket('udp4')
+            async(function () {
+                socket.on('message', function (chunk) {
+                    var line = chunk.toString()
+                    var converted = convert(line)
+                    if (converted.okay) {
+                        var key = Keyify.stringify(extract(converted.line))
+                        sender.hash(key).sender.outbox.push(converted)
+                    } else {
+                        logger.error('parse', { line: line })
+                    }
+                })
+                socket.bind({
+                    address: program.ultimate.bind.address,
+                    port: program.ultimate.bind.port
+                }, async())
+            }, function () {
+                destructible.destruct.wait(socket, 'close')
+                delta(destructible.monitor('listen')).ee(socket).on('close')
+                program.ready.unlatch()
+            })
         })
-    }, function () {
-        destructible.completed.wait(async())
-    })
+    })(destructible.monitor('initialize', true))
 })
