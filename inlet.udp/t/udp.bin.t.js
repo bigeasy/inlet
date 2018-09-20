@@ -51,9 +51,9 @@ function prove (okay, callback) {
         }, function () {
             program.ready.wait(async())
         }, function () {
-            socket.send('{"id":1', 8514, async())
+            socket.send('{"id":1', 8514, '127.0.0.1', async())
         }, function () {
-            socket.send('{"id":1}', 8514, async())
+            socket.send('{"id":1}', 8514, '127.0.0.1', async())
         }, function () {
             done.wait(async())
         }, function () {
