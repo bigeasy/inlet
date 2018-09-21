@@ -32,7 +32,7 @@
     ___ . ___
  */
 require('arguable')(module, function (program, callback) {
-    program.required('bind', 'to', 'id')
+    program.required('bind', 'to')
     program.validate(require('arguable/bindable'), 'bind')
 
     var logger = require('prolific.logger').createLogger('inlet.udp')
@@ -53,11 +53,13 @@ require('arguable')(module, function (program, callback) {
 
     destructible.completed.wait(callback)
 
+    var coalesce = require('extant')
+
     var Converter = require('./converter')
 
     var convert = Converter(program.ultimate.json)
     var extract = Function.apply(Function, [].concat(
-        '$', Object.keys(global), 'return ' + program.ultimate.id
+        '$', Object.keys(global), 'return ' + coalesce(program.ultimate.id, 'Math.random()')
     ))
 
     var Keyify = require('keyify')

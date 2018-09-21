@@ -24,6 +24,7 @@
                             "cadence":                      "1.0.x",
                             "conduit":                      "2.13.x",
                             "destructible":                 "0.33.x",
+                            "extant":                       "1.0.x",
                             "foremost":                     "0.0.x",
                             "olio":                         "0.16.x",
                             "prolific.logger":              "8.1.x",
