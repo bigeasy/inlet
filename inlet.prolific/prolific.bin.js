@@ -45,7 +45,7 @@ require('arguable')(module, function (program, callback) {
                 var receiver = { inbox: new Procession, outbox: new Procession }
                 receiver.inbox.pump(cadence(function (async, envelope) {
                     if (envelope != null) {
-                        var entry = sink.acceptor.acceptByProperties([ envelope ])
+                        var entry = sink.acceptor.acceptByProperties([ envelope.line ])
                         if (entry != null) {
                             sink.queue.push(entry)
                         }

@@ -48,8 +48,8 @@ function prove (okay, callback) {
                     }
                 }
                 mock.sender('udp', 1, receiver)
-                receiver.outbox.push({ qualifier: 'example', level: 'debug' })
-                receiver.outbox.push({ qualifier: 'example', level: 'error' })
+                receiver.outbox.push({ line: { qualifier: 'example', level: 'debug' } })
+                receiver.outbox.push({ line: { qualifier: 'example', level: 'error' } })
                 receiver.outbox.push(null)
             })
         })
