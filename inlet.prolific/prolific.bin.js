@@ -29,10 +29,12 @@ require('arguable')(module, function (program, callback) {
     shuttle.start(logger)
     destructible.destruct.wait(shuttle, 'close')
 
+    var Acceptor = require('prolific.acceptor')
+
     var sink = require('prolific.resolver').sink
+    sink.acceptor = new Acceptor(true, [])
 
     var Procession = require('procession')
-
     var Olio = require('olio')
 
     var cadence = require('cadence')
@@ -42,7 +44,12 @@ require('arguable')(module, function (program, callback) {
             destructible.monitor('olio', Olio, cadence(function (async, destructible) {
                 var receiver = { inbox: new Procession, outbox: new Procession }
                 receiver.inbox.pump(cadence(function (async, envelope) {
-                    sink.queue.push(envelope)
+                    if (envelope != null) {
+                        var entry = sink.acceptor.acceptByProperties([ envelope ])
+                        if (entry != null) {
+                            sink.queue.push(entry)
+                        }
+                    }
                     return []
                 }), destructible.monitor('outbox'))
                 destructible.destruct.wait(receiver.outbox, 'end')
