@@ -27,7 +27,7 @@
                             "extant":                       "1.0.x",
                             "foremost":                     "0.0.x",
                             "olio":                         "0.18.x",
-                            "prolific.logger":              "8.1.x",
+                            "prolific.logger":              "8.2.x",
                             "prolific.shuttle":             "20.10.x"
     },
     "devDependencies":
