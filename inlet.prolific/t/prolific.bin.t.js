@@ -39,7 +39,6 @@ function prove (okay, callback) {
                     push: function (envelope) {
                         if (envelope != null) {
                             okay(envelope, {
-                                path: 'example',
                                 level: 3,
                                 formatted: [],
                                 json: { qualifier: 'example', level: 'error' }
