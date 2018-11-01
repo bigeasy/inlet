@@ -25,7 +25,7 @@
                             "conduit":                      "2.16.x",
                             "destructible":                 "0.35.x",
                             "olio":                         "0.20.x",
-                            "prolific.logger":              "8.2.x"
+                            "prolific.logger":              "8.4.x"
     },
     "devDependencies":
     {
