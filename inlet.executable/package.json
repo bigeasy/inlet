@@ -27,11 +27,6 @@
     {
                             "proof":                        "3.0.x"
     },
-    "main":                 "inlet.bin",
-    "bin":
-    {
-                            "inlet":                        "inlet.bin.js"
-    },
     "scripts":
     {
                             "test": "proof test t/*.t.js"
