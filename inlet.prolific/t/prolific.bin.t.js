@@ -14,43 +14,44 @@ function prove (okay, callback) {
 
     var cadence = require('cadence')
 
-    var Acceptor = require('prolific.acceptor')
-    var mock = new Mock
+    var path = require('path')
 
-    var bin = require('../prolific.bin')
-    var program = bin([], {}, destructible.monitor('bin'))
 
     cadence(function (async) {
         async(function () {
-            mock.ready.wait(async())
-        }, function () {
-            mock.initialize('self', 0)
-            program.ready.wait(async())
-        }, function () {
-            async(function () {
-                var sink = require('prolific.resolver').sink
-                var receiver = { inbox: new Procession, outbox: new Procession }
-                sink.acceptor = new Acceptor(false, [{
-                    path: ".",
-                    level: "warn",
-                    accept: true
-                }])
-                sink.queue = {
-                    push: function (envelope) {
-                        if (envelope != null) {
-                            okay(envelope, {
-                                level: 3,
-                                formatted: [],
-                                json: { qualifier: 'example', level: 'error' }
-                            }, 'envelope')
-                        }
+            destructible.monitor('mock', Mock, {
+                socket: path.resolve(__dirname, 'socket'),
+                children: {
+                    prolific: {
+                        path: path.resolve(__dirname, '../prolific.bin'),
+                        workers: 1,
+                        properties: {}
+                    },
+                    client: {
+                        path: path.resolve(__dirname, 'client.js'),
+                        workers: 1,
+                        properties: {}
                     }
                 }
-                mock.sender('udp', 1, receiver)
-                receiver.outbox.push({ line: { qualifier: 'example', level: 'debug' } })
-                receiver.outbox.push({ line: { qualifier: 'example', level: 'error' } })
-                receiver.outbox.push(null)
-            })
+            }, async())
+        }, function (children) {
+            var wait = async()
+            var sink = require('prolific.resolver').sink
+            sink.json = function (level, qualifier, label, entry) {
+                okay({
+                    level: level,
+                    qualifier: qualifier,
+                    label: label,
+                    entry: entry
+                }, {
+                    level: 'error',
+                    qualifier: 'qualifier',
+                    label: 'label',
+                    entry: { level: 'error', qualifier: 'qualifier', label: 'label' }
+                }, 'prolific')
+                wait()
+            }
+            children.client[0].processes[0].conduit.push({ qualifier: 'qualifier', level: 'error', label: 'label' })
         })
     })(destructible.monitor('test'))
 }

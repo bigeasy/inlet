@@ -20,15 +20,14 @@
     },
     "dependencies":
     {
-                            "arguable":                     "6.8.x",
                             "cadence":                      "1.0.x",
-                            "conduit":                      "2.16.x",
-                            "destructible":                 "0.35.x",
-                            "olio":                         "0.20.x",
+                            "conduit":                      "2.32.x",
+                            "olio":                         "0.34.x",
                             "prolific.logger":              "8.4.x"
     },
     "devDependencies":
     {
+                            "destructible":                 "0.36.x",
                             "proof":                        "3.0.x"
     },
     "main":                 "prolific.bin",
