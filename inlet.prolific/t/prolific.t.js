@@ -2,7 +2,7 @@ require('proof')(1, prove)
 
 function prove (okay, callback) {
     var Destructible = require('destructible')
-    var destructible = new Destructible('t/prolific.bin')
+    var destructible = new Destructible('t/prolific')
 
     var shuttle = require('foremost')('prolific.shuttle')
 
@@ -23,7 +23,7 @@ function prove (okay, callback) {
                 socket: path.resolve(__dirname, 'socket'),
                 children: {
                     prolific: {
-                        path: path.resolve(__dirname, '../prolific.bin'),
+                        path: path.resolve(__dirname, '..'),
                         workers: 1,
                         properties: {}
                     },

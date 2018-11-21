@@ -30,7 +30,7 @@
                             "destructible":                 "0.36.x",
                             "proof":                        "3.0.x"
     },
-    "main":                 "prolific.bin",
+    "main":                 "prolific",
     "scripts":
     {
                             "test": "proof test t/*.t.js"
