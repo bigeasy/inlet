@@ -1,6 +1,7 @@
 /.wiseguy
 /docs
 /node_modules
+/*/coverage
 /*/node_modules/*
 !/inlet.executable/node_modules/inlet.test.js
 /.proof.out
