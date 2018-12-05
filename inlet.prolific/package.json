@@ -27,7 +27,7 @@
     },
     "devDependencies":
     {
-                            "destructible":                 "0.36.x",
+                            "destructible":                 "0.41.x",
                             "proof":                        "5.0.x"
     },
     "main":                 "prolific",
