@@ -19,7 +19,7 @@ function prove (okay, callback) {
 
     cadence(function (async) {
         async(function () {
-            destructible.monitor('mock', Mock, {
+            destructible.durable('mock', Mock, {
                 socket: path.resolve(__dirname, 'socket'),
                 children: {
                     prolific: {
@@ -53,5 +53,5 @@ function prove (okay, callback) {
             }
             children.client[0].processes[0].conduit.push({ qualifier: 'qualifier', level: 'error', label: 'label' })
         })
-    })(destructible.monitor('test'))
+    })(destructible.durable('test'))
 }
