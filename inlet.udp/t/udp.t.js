@@ -20,7 +20,7 @@ function prove (okay, callback) {
 
     cadence(function (async) {
         async(function () {
-            destructible.monitor('mock', Mock, {
+            destructible.durable('mock', Mock, {
                 socket: path.resolve(__dirname, 'socket'),
                 children: {
                     udp: {
@@ -48,5 +48,5 @@ function prove (okay, callback) {
             okay(envelope, { okay: true, type: 'json', line: { id: 1 } }, 'sent')
             socket.close()
         })
-    })(destructible.monitor('run'))
+    })(destructible.durable('run'))
 }

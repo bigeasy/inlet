@@ -7,7 +7,7 @@ function Consumer () {
 
 Consumer.prototype.connect = cadence(function (async, destructible, inbox, outbox) {
     destructible.destruct.wait(outbox, 'end')
-    destructible.monitor('inbox', inbox.pump(this, function (envelope) {
+    destructible.durable('inbox', inbox.pump(this, function (envelope) {
         this.queue.push(envelope)
     }), 'destructible', async())
 })
