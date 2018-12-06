@@ -51,7 +51,9 @@ function prove (okay, callback) {
                 }, 'prolific')
                 wait()
             }
-            children.client[0].processes[0].conduit.push({ qualifier: 'qualifier', level: 'error', label: 'label' })
+            children.client[0].processes[0].conduit.push({
+                line: { qualifier: 'qualifier', level: 'error', label: 'label' }
+            })
         })
     })(destructible.durable('test'))
 }
