@@ -8,7 +8,7 @@ Prolific.prototype.connect = cadence(function (async, destructible, inbox, outbo
     destructible.durable('inbox', inbox.pump(function (envelope) {
         if (envelope != null) {
             var entry = envelope.line
-            sink.json(entry.level, entry.qualifier, entry.label, entry)
+            sink.json(entry.level, entry.qualifier, entry.label, entry, entry)
         }
     }), 'destructible', async())
 })
