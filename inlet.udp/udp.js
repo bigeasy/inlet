@@ -13,9 +13,7 @@ var logger = require('prolific.logger').createLogger('inlet.udp')
 
 module.exports = cadence(function (async, destructible, olio, properties) {
     var convert = Converter(properties.json)
-    var extract = Function.apply(Function, [].concat(
-        '$', Object.keys(global), 'return ' + coalesce(properties.id, 'Math.random()')
-    ))
+    var extract = properties.id
     async(function () {
         olio.sender(properties.to, cadence(function (async, destructible, inbox, outbox) {
             destructible.destruct.wait(outbox, 'end')
