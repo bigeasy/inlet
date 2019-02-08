@@ -27,7 +27,7 @@ function prove (okay, callback) {
                         path: path.resolve(__dirname, '..'),
                         workers: 1,
                         properties: {
-                            id: function () { return Math.random() },
+                            extractor: path.join(__dirname, 'extractor.js'),
                             iface: '127.0.0.1',
                             json: true,
                             port: 8514,
