@@ -35,7 +35,10 @@ module.exports = cadence(function (async, destructible, olio, properties) {
             delta(async()).ee(socket).on('listening')
             socket.bind({ address: properties.iface, port: properties.port })
         }, function () {
-            destructible.destruct.wait(socket, 'close')
+            var close = destructible.destruct.wait(socket, 'close')
+            socket.on('close', function () {
+                destructible.destruct.cancel(close)
+            })
             delta(destructible.durable('listen')).ee(socket).on('close')
             return null
         })
