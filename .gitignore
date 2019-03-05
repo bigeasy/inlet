@@ -6,3 +6,4 @@
 !/inlet.executable/node_modules/inlet.test.js
 /.proof.out
 /coverage
+/.nyc_output

@@ -29,11 +29,11 @@
     "devDependencies":
     {
                             "destructible":                 "0.41.x",
-                            "proof":                        "5.0.x"
+                            "proof":                        "7.0.x"
     },
     "main":                 "udp",
     "scripts":
     {
-                            "test": "proof test t/*.t.js"
+                            "test": "proof test test/*.t.js"
     }
 }
