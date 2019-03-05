@@ -20,7 +20,7 @@
     },
     "dependencies":
     {
-                            "cadence":                      "2.0.x",
+                            "cadence":                      "3.0.x",
                             "conduit":                      "2.36.x",
                             "olio":                         "1.0.x",
                             "prolific.logger":              "9.0.x"
