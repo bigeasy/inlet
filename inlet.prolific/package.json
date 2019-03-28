@@ -1,6 +1,6 @@
 {
     "name":                 "inlet.prolific",
-    "version":              "4.0.0",
+    "version":              "5.0.0",
     "description":
 
       "Send messages through a Prolific pipeline.",
