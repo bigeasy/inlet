@@ -21,7 +21,7 @@ function prove (okay, callback) {
         async(function () {
             destructible.durable('mock', Mock, {
                 socket: path.resolve(__dirname, 'socket'),
-                children: {
+                constituents: {
                     prolific: {
                         path: path.resolve(__dirname, '..'),
                         workers: 1,
@@ -34,7 +34,7 @@ function prove (okay, callback) {
                     }
                 }
             }, async())
-        }, function (children) {
+        }, function (constituents) {
             var wait = async()
             var sink = require('prolific.resolver').sink
             sink.json = function (level, qualifier, label, entry) {
@@ -51,7 +51,7 @@ function prove (okay, callback) {
                 }, 'prolific')
                 wait()
             }
-            children.client[0].processes[0].conduit.push({
+            constituents.client[0].processes[0].conduit.push({
                 line: { qualifier: 'qualifier', level: 'error', label: 'label' }
             })
         })
