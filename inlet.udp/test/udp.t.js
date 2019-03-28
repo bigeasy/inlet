@@ -22,7 +22,7 @@ function prove (okay, callback) {
         async(function () {
             destructible.durable('mock', Mock, {
                 socket: path.resolve(__dirname, 'socket'),
-                children: {
+                constituents: {
                     udp: {
                         path: path.resolve(__dirname, '..'),
                         workers: 1,

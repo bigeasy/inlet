@@ -23,7 +23,7 @@
                             "cadence":                      "2.0.x",
                             "conduit":                      "3.0.x",
                             "extant":                       "1.0.x",
-                            "olio":                         "2.0.x",
+                            "olio":                         "4.0.x",
                             "prolific.logger":              "9.0.x"
     },
     "devDependencies":
