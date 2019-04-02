@@ -1,6 +1,6 @@
 {
     "name":                 "inlet.udp",
-    "version":              "4.0.1",
+    "version":              "4.0.2",
     "description":
 
       "A micro-framework for HTTP end points.",
